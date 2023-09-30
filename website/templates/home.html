@@ -1,6 +1,33 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
-    <h1 align="center">Notes</h1>
+    <h1>Measurement</h1>
+    <ul class="list-group list-group-flush" id="measurement">
+      {% for measurement in user.measurement %}
+      <li class="list-group-item">
+        {{ measurement.data }}
+        <button type="button" class="close" onClick="deleteMeasurement({{ measurement.id }})">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    <form method="POST">
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Measurement</button>
+      </div>
+    </form>
+    <form method="POST">
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Save Measurement</button>
+      </div>
+    </form>
+    <h3>measurement ID number: </h3>
+
+  
+
+    <h3>Notes</h3>
     <ul class="list-group list-group-flush" id="notes">
       {% for note in user.notes %}
       <li class="list-group-item">
