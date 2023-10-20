@@ -9,6 +9,7 @@ class Measurement(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #patrzac na user_id możemy zobaczyć jaki user to stworzył
     plot = db.relationship('Plot')
+   
 
 
 class Plot(db.Model):

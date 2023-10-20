@@ -5,7 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-plt.style.use('fivethirtyeight')
 
 x_vals = []
 y_vals = []
@@ -28,7 +27,7 @@ def animate(i):
     plt.tight_layout()
 
 
-ani = FuncAnimation(plt.gcf(), animate, interval=100) #gcf= get current figure ; 1000=1sekunda
+ani = FuncAnimation(plt.gcf(), animate, interval=1000) #gcf= get current figure ; 1000=1sekunda
 
 plt.tight_layout()
 plt.show()

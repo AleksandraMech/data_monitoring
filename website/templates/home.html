@@ -11,12 +11,16 @@
       </li>
       {% endfor %}
     </ul>
-    <form method="POST">
+
+    <form method="POST" enctype="multipart/form-data">
       <br />
+      <input type="file" id="file" name="file"><br />
       <div align="center">
-        <button type="submit" class="btn btn-primary">Add Measurement</button>
+      <button type="submit" class="btn btn-primary">Add Measurement</button>
       </div>
     </form>
+
+    
     <form method="POST">
       <br />
       <div align="center">
@@ -24,8 +28,6 @@
       </div>
     </form>
     <h3>measurement ID number: </h3>
-
-  
 
     <h3>Notes</h3>
     <ul class="list-group list-group-flush" id="notes">
