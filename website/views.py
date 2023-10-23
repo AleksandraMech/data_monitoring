@@ -34,16 +34,16 @@ def home():
             
     return render_template("home.html", user=current_user)
 
-@views.route('/', methods=['GET', 'POST'])
+@views.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
     if request.method == 'POST':
         
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            values = pd.read_csv(file)
-            new_values = Measurement(values, user_id=current_user.id)
-            db.session.add(new_values)
+        measurement = request.files['measurement']
+        if measurement and allowed_file(measurement.filename):
+            value = pd.read_csv(measurement)
+            new_measurements = Measurement(value=measurement, user_id=current_user.id)
+            db.session.add(new_measurements)
             db.session.commit()
             flash('Measurement added!', category='succes')
             #filename = secure_filename(file.filename)
@@ -57,6 +57,22 @@ def upload():
             
     return render_template("upload.html", user=current_user)
 
+@views.route('/graph', methods=['GET', 'POST'])
+@login_required
+def graph():
+    data = [
+        ("01-01-2020", 15),
+        ("01-01-2020", 13),
+        ("01-01-2020", 14),
+        ("01-01-2020", 13),
+        ("01-01-2020", 15),
+        ("01-01-2020", 17),
+    ]
+
+    labels = [row[0] for row in data]
+    values = [row[1] for row in data]
+            
+    return render_template("graph.html", labels = labels, values = values,  user=current_user)
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
