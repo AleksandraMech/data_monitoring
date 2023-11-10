@@ -13,7 +13,24 @@ import csv
 
 def on_message_received(ch, method, properties, body):
     print(f'recived new message: {body}')
-
+   # fieldnames = ["messageId", "measure", "measure_time", "measurement_device"]
+    with open('messages.csv', mode='a') as msg_file:
+    #  msg_writer = csv.DictWriter(msg_file, fieldnames=fieldnames)
+     # msg_writer.writeheader()
+     # while True:
+        #with open('messages.csv', 'a') as msg_writer:
+       # msg_writer = csv.DictWriter(csv_file, headers_for_csv=headers_for_csv)
+       # info = {
+         #   "messageId": messageId,
+         #   "measure": measure,
+          #  "measure_time": measure_time
+          #  "measurement_device": measurement_device
+       # }
+       # csv_writer.writerow(info)
+      #  print(messageId, measure, measure_time, measurement_device)
+      msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+      msg_writer.writerow({body}) #.second, microsecond
+    
 connection_parameters = pika.ConnectionParameters('localhost')
 
 connection = pika.BlockingConnection(connection_parameters)
@@ -33,6 +50,6 @@ print('Starting Consuming')
 
 channel.start_consuming()
 
-with open('messages.csv', mode='a') as msg_file:
-        msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        msg_writer.writerow([measure, measure_time, measurement_device]) #.second, microsecond
+#with open('messages.csv', mode='a') as msg_file:
+        #msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+      #  msg_writer.writerow([measure, measure_time, measurement_device]) #.second, microsecond

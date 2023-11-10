@@ -24,7 +24,7 @@ while(True):
     measure_time = datetime.datetime.now()
     measurement_device = "chair"
 
-    message = f"Sending Message Id: {messageId}, measure: {measure}, measure time: {measure_time}, measurement device: {measurement_device} "
+    message = f" {messageId}, {measure}, {measure_time}, {measurement_device} "
 
     channel.basic_publish(exchange='', routing_key='measurement_data', body=message)
 
