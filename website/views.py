@@ -84,4 +84,14 @@ def delete_note():
             db.session.delete(note)
             db.session.commit()
 
+@views.route('/delete-graph', methods=['POST'])
+def delete_graph():  
+    graph = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
+    graphId = graph['graphId']
+    graph = Graph.query.get(graphId)
+    if graph:
+        if graph.user_id == current_user.id:
+            db.session.delete(graph)
+            db.session.commit()
+
     return jsonify({})

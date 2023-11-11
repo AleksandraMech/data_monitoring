@@ -5,6 +5,30 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>"
     </head>
     <body>
+        
+
+
+    <ul class="list-group list-group-flush" id="graph">
+      {% for graph in user.graph %}
+      <li class="list-group-item">
+        {{ graph.data }}
+        <button type="button" class="close" onClick="deleteGraph({{ note.id }})">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    <form method="POST">
+      
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Graph</button>
+      </div>
+    </form>
+    <br />
+    <br />
+
+
        <canvas id="lineChart" width="900" height="400"></canvas>
        <script>
         var ctx = document.getElementById("lineChart").getContext("2d");

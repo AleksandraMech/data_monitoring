@@ -30,6 +30,6 @@ while(True):
 
     print(f"sent message from bathtube: {message}")
     
-    time.sleep(1)
+    time.sleep(0.1)
 
     messageId+=1
