@@ -8,7 +8,7 @@ connection_parameters = pika.ConnectionParameters('localhost')
 
 connection = pika.BlockingConnection(connection_parameters)
 
-channel = connection.channel() #connection could have many different channels
+channel = connection.channel()
 
 channel.queue_declare(queue='measurement_data')
 
@@ -33,7 +33,7 @@ while(True):
 
     print(f"sent message from bathtube: {message}")
     
-    time.sleep(1)
+    time.sleep(random.randint(1, 4))
 
     messageId+=1
    

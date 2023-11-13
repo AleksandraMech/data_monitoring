@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+#import psycopg2
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -11,6 +12,10 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+    #sprobowac z comman line
+   # app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://ewmogiki:7yNQB1LV91KX3PYvbrTGyJ_tbkwzq4Nt@surus.db.elephantsql.com/ewmogiki"
+   # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+   #czemu mi ni edaiała z postgresem?? dodadac connection do rabbita
     db.init_app(app)
 
 

@@ -1,3 +1,4 @@
+#from __future__ import division 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,3 +18,5 @@ restingecg.t = restingecg.t/1000
 
 plt.plot(restingecg.t, restingecg.ecg, label='ekg') #dlaczego ten wykres mi sie nie wyswietla??
 plt.show()
+
+
