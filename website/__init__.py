@@ -15,7 +15,8 @@ def create_app():
     #sprobowac z comman line
    # app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://ewmogiki:7yNQB1LV91KX3PYvbrTGyJ_tbkwzq4Nt@surus.db.elephantsql.com/ewmogiki"
    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-   #czemu mi ni edaiała z postgresem?? dodadac connection do rabbita
+   #czemu mi ni daiała z postgresem?? dodadac connection do rabbita
+  # cur = con.cursor()
     db.init_app(app)
 
 
