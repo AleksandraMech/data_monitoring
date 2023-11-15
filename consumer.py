@@ -9,7 +9,7 @@ import psycopg2
 from psycopg2 import OperationalError, errorcodes, errors
 import datetime
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('data_monitoring','albertina')))
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
 channel = connection.channel()
 
 def print_exception(err):
