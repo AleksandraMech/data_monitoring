@@ -9,7 +9,13 @@ import psycopg2
 from psycopg2 import OperationalError, errorcodes, errors
 import datetime
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
+#connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
+
+
+connection_parameters = pika.ConnectionParameters('localhost')
+
+connection = pika.BlockingConnection(connection_parameters)
+
 channel = connection.channel()
 
 def print_exception(err):
@@ -32,12 +38,12 @@ def on_message_received(ch, method, properties, body):
 
     while(1):
        try: 
-          conn = psycopg2.connect(database="data_monitoring", user="", password="albertina", host="localhost", port="5672")
+          conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
           if conn != None:
              cur = conn.cursor()
-             now = datetime.datetime.now().isoformat('', 'seconds')
+             now = datetime.datetime.now().isoformat(' ', 'seconds')
              try:
-                cur.execute("INSERT INFO data_monitoring (created,info) VALUES (%s,%s)", (now,json_info))
+                cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"employees\": \"dx\"}')") ### podopisywac sobie wiecej wartosci
                 conn.commit()
                 cur.close()
                 conn.close()
