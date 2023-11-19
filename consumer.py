@@ -2,15 +2,15 @@ import pika
 import time
 #import random
 #from producer_bathtube import measure, measure_time, measurement_device
-#import csv
+import csv
 import sys
 import psycopg2
 #import the error handling libraries for psychopg2
 from psycopg2 import OperationalError, errorcodes, errors
 import datetime
+import json
 
-#connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
-
+#connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest'))
 
 connection_parameters = pika.ConnectionParameters('localhost')
 
@@ -28,13 +28,36 @@ def print_exception(err):
    print("pgcode:", err.pgcode, "\n")
 
 def on_message_received(ch, method, properties, body):
-    print(f'recived new message: {body}')
-    line = body.decode('ascii')
+    #print(f'recived new message: {body}')
+    line = body.decode('ascii')  ##dzięki temu nie mam np b' 67' zamiast po prostu 67
     json_info = line.replace("\'","\"")
     print(line)
     #with open('messages.csv', mode='a') as msg_file:
      # msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
      # msg_writer.writerow({body}) #.second, microsecond
+
+    class Measure:
+       def __init__(self, device, values):
+          self.device = device
+          self.values = values
+
+    p1 = Measure("bathtube", line)
+    with open("plik.json", "a") as plik:
+        json_string = json.dumps(p1.__dict__, indent = 4)
+        plik.write(json_string)
+
+#### po co ja tworze ten plik json? czy kilka danych mam przypisać do jednej wartości? 
+
+    #with open("plik.json", "r") as plik:
+     # measure = Measure(**json.loads(plik.read()))
+      # print(measure.device, measure.values)
+
+   # insert_stmt = (
+   #   "INSERT INTO measurements (device, value) "
+   #  "VALUES (%s, %s)"
+   # )
+   # measurement_device = "bathtub"
+    #data = (measurement_device, line)
 
     while(1):
        try: 
@@ -43,11 +66,14 @@ def on_message_received(ch, method, properties, body):
              cur = conn.cursor()
              now = datetime.datetime.now().isoformat(' ', 'seconds')
              try:
-                cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"employees\": \"dx\"}')") ### podopisywac sobie wiecej wartosci
+              #  cur.execute(insert_stmt, data)
+                cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"{line}\": \"przykład\"}')") ### podopisywac sobie wiecej wartosci
+              #  cur.execute("INSERT INTO measurements (json_info ) VALUES (%s)", (json_info))
+                #cur.execute("INSERT INTO measurements (producer, date, values ) VALUES ('{\"employees\": \"przykład\"}')") ### 
                 conn.commit()
                 cur.close()
                 conn.close()
-                print(f'{body} is received')
+                print(f'{line} is received')
                 break
              except Exception as err:
                 print_exception(err)
@@ -60,17 +86,8 @@ def on_message_received(ch, method, properties, body):
           print('Wait for connection')
           continue
 
-              
-#connection_parameters = pika.ConnectionParameters('localhost')
-#connection = pika.BlockingConnection(connection_parameters)
-#channel = connection.channel()
-#channel.queue_declare(queue='C')
-#queue = channel.queue_declare(queue='', exclusive=True)  #exclusive=true mowi brokerowi, ze gdy polaczenie consummera jest zamkniete, to kolejka moze zostac usunieta
-#channel.basic_qos(prefetch_count=1) #qos = quality of service //1 bo kazdy konsument bedzie dostawał jedną wiadomość na raz
-#channel.basic_consume(queue= 'measurement_data_bathtub', on_message_callback=on_message_received)
 
 channel.basic_consume(queue= 'measurement_data', auto_ack=True, on_message_callback=on_message_received)
-#channel.basic_consume(queue="measurement_data", on_message_callback=on_message_received, auto_ack=True)
 
 print('Starting Consuming')
 

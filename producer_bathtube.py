@@ -3,6 +3,7 @@ import time
 import random
 #import csv
 import datetime
+import json
 
 connection_parameters = pika.ConnectionParameters('localhost')
 
@@ -26,7 +27,9 @@ while(True):
     measurement_device = "bathtub"
 
    # message = f"Sending Message Id: {messageId}, measure: {measure}, measure time: {measure_time}, measurement device: {measurement_device} "
-    message = f"{messageId}, {measure}, {measure_time}, {measurement_device} "
+  #  message = f"{messageId}, {measure}, {measure_time}, {measurement_device} "
+    message = f" {measure}"
+  #  message = f" {measure}"
     #message = [messageId, measure, measure_time, measurement_device] #czy ja moge przesyłac tylko wiadomosci i nie moge zmiennych?
     
     channel.basic_publish(exchange='', routing_key='measurement_data', body=message)
