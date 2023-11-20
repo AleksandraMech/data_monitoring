@@ -67,7 +67,7 @@ def on_message_received(ch, method, properties, body):
              now = datetime.datetime.now().isoformat(' ', 'seconds')
              try:
               #  cur.execute(insert_stmt, data)
-                cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"{line}\": \"przykład\"}')") ### podopisywac sobie wiecej wartosci
+                cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"values\": \"line\"}')") ### podopisywac sobie wiecej wartosci
               #  cur.execute("INSERT INTO measurements (json_info ) VALUES (%s)", (json_info))
                 #cur.execute("INSERT INTO measurements (producer, date, values ) VALUES ('{\"employees\": \"przykład\"}')") ### 
                 conn.commit()
