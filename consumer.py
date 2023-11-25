@@ -31,21 +31,21 @@ def on_message_received(ch, method, properties, body):
     #print(f'recived new message: {body}')
     line = body.decode('ascii')  ##dzięki temu nie mam np b' 67' zamiast po prostu 67
     json_info = line.replace("\'","\"")
-    print(line)
+   # print(line)
     #with open('messages.csv', mode='a') as msg_file:
      # msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
      # msg_writer.writerow({body}) #.second, microsecond
 
-    class Measure:
-       def __init__(self, device, values):
-          self.device = device
-          self.values = values
+    #class Measure:
+      # def __init__(self, device, values):
+       #   self.device = device
+        #  self.values = values
 
-    p1 = Measure("bathtube", line)
-    with open("plik.json", "a") as plik:
-        json_string = json.dumps(p1.__dict__)
-        print(json_string)
-        plik.write(json_string)
+   # p1 = Measure("bathtube", line)
+   # with open("plik.json", "a") as plik:
+    #    json_string = json.dumps(p1.__dict__)
+       # print(json_string)
+     #   plik.write(json_string)
 
 #### po co ja tworze ten plik json? czy kilka danych mam przypisać do jednej wartości?  czy i tak te dane json maja być w roznych kolumnach
 
@@ -68,11 +68,11 @@ def on_message_received(ch, method, properties, body):
              now = datetime.datetime.now().isoformat(' ', 'seconds')
              try:
               #  cur.execute(insert_stmt, data)
-                cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"values\": \"line\"}')") ### podopisywac sobie wiecej wartosci
+                #cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"values\": \"line\"}')") ### podopisywac sobie wiecej wartosci
                # cur.execute("INSERT INTO measurements (value) VALUES ('{\"values\": \"line\"}')") 
-                print('xxx',json_string)
-                print('yyyx',str(json_string))
-                zm = "INSERT INTO measurements (json_info) VALUES ('"+str(json_string)+"')"
+              #  print('xxx',json_string)
+                #print('yyyx',str(json_string))
+                zm = "INSERT INTO measurements (json_info) VALUES (\""+str(line)+"\")"
                 print(zm)  ## zrobic to za pomocą formatowanego stringa
                 #cur.execute("INSERT INTO measurements (json_info) VALUES ('",str(json_string),"')")
                 cur.execute(zm)

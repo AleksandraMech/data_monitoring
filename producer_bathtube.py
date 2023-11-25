@@ -29,10 +29,22 @@ while(True):
    # message = f"Sending Message Id: {messageId}, measure: {measure}, measure time: {measure_time}, measurement device: {measurement_device} "
   #  message = f"{messageId}, {measure}, {measure_time}, {measurement_device} "
     message = f" {measure}"
+    
+    class Measure:
+       def __init__(self, device, values):
+          self.device = device
+          self.values = values
+
+    p1 = Measure("bathtube", message)
+    with open("plik.json", "a") as plik:
+        json_string = json.dumps(p1.__dict__)
+       # print(json_string)
+        plik.write(json_string)
+
   #  message = f" {measure}"
     #message = [messageId, measure, measure_time, measurement_device] #czy ja moge przesyłac tylko wiadomosci i nie moge zmiennych?
     
-    channel.basic_publish(exchange='', routing_key='measurement_data', body=message)
+    channel.basic_publish(exchange='', routing_key='measurement_data', body=json_string)
 
     print(f"sent message from bathtube: {message}")
     
