@@ -12,10 +12,6 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-    #sprobowac z comman line
-   # app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://ewmogiki:7yNQB1LV91KX3PYvbrTGyJ_tbkwzq4Nt@surus.db.elephantsql.com/ewmogiki"
-   # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-   #czemu mi ni daiała z postgresem?? dodadac connection do rabbita
   # cur = con.cursor()
     db.init_app(app)
 

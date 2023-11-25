@@ -43,10 +43,11 @@ def on_message_received(ch, method, properties, body):
 
     p1 = Measure("bathtube", line)
     with open("plik.json", "a") as plik:
-        json_string = json.dumps(p1.__dict__, indent = 4)
+        json_string = json.dumps(p1.__dict__)
+        print(json_string)
         plik.write(json_string)
 
-#### po co ja tworze ten plik json? czy kilka danych mam przypisać do jednej wartości? 
+#### po co ja tworze ten plik json? czy kilka danych mam przypisać do jednej wartości?  czy i tak te dane json maja być w roznych kolumnach
 
     #with open("plik.json", "r") as plik:
      # measure = Measure(**json.loads(plik.read()))
@@ -68,7 +69,13 @@ def on_message_received(ch, method, properties, body):
              try:
               #  cur.execute(insert_stmt, data)
                 cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"values\": \"line\"}')") ### podopisywac sobie wiecej wartosci
-              #  cur.execute("INSERT INTO measurements (json_info ) VALUES (%s)", (json_info))
+               # cur.execute("INSERT INTO measurements (value) VALUES ('{\"values\": \"line\"}')") 
+                print('xxx',json_string)
+                print('yyyx',str(json_string))
+                zm = "INSERT INTO measurements (json_info) VALUES ('"+str(json_string)+"')"
+                print(zm)  ## zrobic to za pomocą formatowanego stringa
+                #cur.execute("INSERT INTO measurements (json_info) VALUES ('",str(json_string),"')")
+                cur.execute(zm)
                 #cur.execute("INSERT INTO measurements (producer, date, values ) VALUES ('{\"employees\": \"przykład\"}')") ### 
                 conn.commit()
                 cur.close()
