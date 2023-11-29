@@ -10,7 +10,7 @@ from psycopg2 import OperationalError, errorcodes, errors
 import datetime
 import json
 
-#connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest'))
+#connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
 
 connection_parameters = pika.ConnectionParameters('localhost')
 
@@ -36,29 +36,6 @@ def on_message_received(ch, method, properties, body):
      # msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
      # msg_writer.writerow({body}) #.second, microsecond
 
-    #class Measure:
-      # def __init__(self, device, values):
-       #   self.device = device
-        #  self.values = values
-
-   # p1 = Measure("bathtube", line)
-   # with open("plik.json", "a") as plik:
-    #    json_string = json.dumps(p1.__dict__)
-       # print(json_string)
-     #   plik.write(json_string)
-
-#### po co ja tworze ten plik json? czy kilka danych mam przypisać do jednej wartości?  czy i tak te dane json maja być w roznych kolumnach
-
-    #with open("plik.json", "r") as plik:
-     # measure = Measure(**json.loads(plik.read()))
-      # print(measure.device, measure.values)
-
-   # insert_stmt = (
-   #   "INSERT INTO measurements (device, value) "
-   #  "VALUES (%s, %s)"
-   # )
-   # measurement_device = "bathtub"
-    #data = (measurement_device, line)
 
     while(1):
        try: 
@@ -72,15 +49,29 @@ def on_message_received(ch, method, properties, body):
                # cur.execute("INSERT INTO measurements (value) VALUES ('{\"values\": \"line\"}')") 
               #  print('xxx',json_string)
                 #print('yyyx',str(json_string))
-                zm = "INSERT INTO measurements (json_info) VALUES (\""+str(line)+"\")"
+              #  zm = "INSERT INTO measurements (json_info) VALUES (%(line)s)" 
+                zm = "INSERT INTO measurements (json_info) VALUES (\'"+str(line)+"\')"
                 print(zm)  ## zrobic to za pomocą formatowanego stringa
                 #cur.execute("INSERT INTO measurements (json_info) VALUES ('",str(json_string),"')")
                 cur.execute(zm)
                 #cur.execute("INSERT INTO measurements (producer, date, values ) VALUES ('{\"employees\": \"przykład\"}')") ### 
+               # zmienna = cur.execute("SELECT json_info -> 'values' as keyvalues FROM measurements") 
+               # conn.commit()
+             #   cur.close()
+              #  conn.close()
+                print(f'{line} is received')
+
+                otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
+                cur.execute(otrzymane)
                 conn.commit()
+
+                for(values) in cur:
+                  x = f'{values}'
+                  print(x)
                 cur.close()
                 conn.close()
-                print(f'{line} is received')
+               # print(f'Otrzymane: {otrzymane}')
+
                 break
              except Exception as err:
                 print_exception(err)
