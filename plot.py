@@ -49,10 +49,14 @@ while True:
                 #rand_val = np.random.randn(1)
                 # rand_val = (str(values))[2:-3] #decyduje o wartościach y na wykresie
                  # to_convert = re.findall(r'\d+\.\d+', value)
+
+                 
                         
                 x=0
-                for line in value: 
-                    to_convert = re.findall(r'\d\d+', str(value[0]))
+                for i in value: 
+                    print('i', i)
+                   # to_convert = re.findall(r'\d\d+', str(value[0]))
+                    to_convert = re.findall(r'\d\d+', str(i))
                     converted = float(to_convert[0])
                     rand_val = (str(converted))
                     #  rand_val = (str(value[0]))

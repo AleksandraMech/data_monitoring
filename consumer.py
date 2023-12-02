@@ -27,15 +27,10 @@ def print_exception(err):
    print("pgerror:", err.pgerror)
    print("pgcode:", err.pgcode, "\n")
 
+
 def on_message_received(ch, method, properties, body):
-    #print(f'recived new message: {body}')
     line = body.decode('ascii')  ##dzięki temu nie mam np b' 67' zamiast po prostu 67
     json_info = line.replace("\'","\"")
-   # print(line)
-    #with open('messages.csv', mode='a') as msg_file:
-     # msg_writer = csv.writer(msg_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-     # msg_writer.writerow({body}) #.second, microsecond
-
 
     while(1):
        try: 
@@ -44,21 +39,12 @@ def on_message_received(ch, method, properties, body):
              cur = conn.cursor()
              now = datetime.datetime.now().isoformat(' ', 'seconds')
              try:
-              #  cur.execute(insert_stmt, data)
-                #cur.execute("INSERT INTO measurements (json_info) VALUES ('{\"values\": \"line\"}')") ### podopisywac sobie wiecej wartosci
                # cur.execute("INSERT INTO measurements (value) VALUES ('{\"values\": \"line\"}')") 
-              #  print('xxx',json_string)
-                #print('yyyx',str(json_string))
               #  zm = "INSERT INTO measurements (json_info) VALUES (%(line)s)" 
-                zm = "INSERT INTO measurements (json_info) VALUES (\'"+str(line)+"\')"
+                zm = "INSERT INTO measurements (json_info, measurements_date) VALUES (\'"+str(line)+"\', '"+now+"')"
                 print(zm)  ## zrobic to za pomocą formatowanego stringa
                 #cur.execute("INSERT INTO measurements (json_info) VALUES ('",str(json_string),"')")
                 cur.execute(zm)
-                #cur.execute("INSERT INTO measurements (producer, date, values ) VALUES ('{\"employees\": \"przykład\"}')") ### 
-               # zmienna = cur.execute("SELECT json_info -> 'values' as keyvalues FROM measurements") 
-               # conn.commit()
-             #   cur.close()
-              #  conn.close()
                 print(f'{line} is received')
 
                 otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 

@@ -1,0 +1,1 @@
+# to set up test enviroment - coś co się będzie wykonywać przed każdym testem

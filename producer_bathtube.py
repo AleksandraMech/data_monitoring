@@ -22,7 +22,7 @@ messageId = 1
 
 while(True):
 
-    measure = random.randint(50, 80)
+    measure = random.randint(55, 90)
     measure_time = datetime.datetime.now()
     measurement_device = "bathtub"
 
@@ -48,7 +48,8 @@ while(True):
 
     print(f"sent message from bathtube: {message}")
     
-    time.sleep(random.randint(1, 4))
+    #time.sleep(random.randint(1, 4)) #zmienic na 3
+    time.sleep(3)
 
     messageId+=1
    
