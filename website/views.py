@@ -9,6 +9,10 @@ from .models import Measurement
 import json
 import os #operating system, library
 import pandas as pd
+import psycopg2
+import re
+import numpy as np
+
 
 views = Blueprint('views', __name__)
 
@@ -60,19 +64,84 @@ def upload():
 @views.route('/graph', methods=['GET', 'POST'])
 @login_required
 def graph():
-    data = [
-        ("01-01-2020", 15),
-        ("01-01-2020", 13),
-        ("01-01-2020", 14),
-        ("01-01-2020", 13),
-        ("01-01-2020", 15),
-        ("01-01-2020", 17),
-    ]
+     while True:     
+        conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+        if conn != None:
+            cur = conn.cursor()
+            otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
+            ##sprobowac za zapytania zrobic liste
+            cur.execute(otrzymane)
+            # ll =  cur.fetchall()
+            conn.commit()
+            value = [] 
+            converted_value = []
+             #zamienic krotki na liste i pozniej iterowac po liscie # tuple
+            # print('cur:', ll)
+            for(values) in cur:
+                #print(values) ##(' 78',)
+                value.append(values)
+                print(value) ##[(' 56',)]
+            for(values) in cur:
+                #print(values) ##(' 78',)
+                value.append(values)
+                print(value) ##[(' 56',)]
 
-    labels = [row[0] for row in data]
-    values = [row[1] for row in data]
+            query = 'SELECT measurements_date FROM measurements'
+            cur.execute(query)
+            conn.commit()
+            data3 = [] 
+            for(measurements_date) in cur:
+                zmienna = str(measurements_date)
+                data2.append(zmienna)
+                print(zmienna)
+            print('data2: ',data2)    
+
+            cur.close()
+            conn.close()     
+            print('lista',value)
+            data =[]
+            #data3 =[]
             
-    return render_template("graph.html", labels = labels, values = values,  user=current_user)
+            for i in value: 
+                    print('i:',i)
+                    to_convert = re.findall(r'\d\d+', str(i)) ##jak zmieniac wartosci w tym nawiasie???
+                   # converted = float(to_convert[0])
+                    converted = str(to_convert[0])
+                    print('converted:', converted)
+                    #rand_val = (str(converted))
+                
+                    data.append(converted)
+                    print('data:', data)
+                   # y = str(datetime.datetime.now())
+                   # data3.append(y)
+
+            data2 = [
+                ("01-01-2020", 15),
+                ("01-01-2020", 13),
+                ("01-01-2020", 14),
+                ("01-01-2020", 13),
+                ("01-01-2020", 17),
+                ("01-01-2020", 13),
+                ("01-01-2020", 14),
+                ("01-01-2020", 13),
+                ("01-01-2020", 17),
+                ("01-01-2020", 13),
+                ("01-01-2020", 14),
+                ("01-01-2020", 13),
+                ("01-01-2020", 17),
+                ("01-01-2020", 13),
+                ("01-01-2020", 14),
+                ("01-01-2020", 13),
+                ("01-01-2020", 70),
+                    ]
+
+            labels = [row[0] for row in data3]
+            values = [row[1] for row in data]
+
+            
+            return render_template("graph.html", labels = labels, values = values,  user=current_user)
+
+                    
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
