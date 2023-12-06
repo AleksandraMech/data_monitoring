@@ -14,13 +14,13 @@ import re
 import numpy as np
 
 
+
 views = Blueprint('views', __name__)
-
+"""
 ALLOWED_EXTENSIONS = set(['csv'])
-
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS """
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -38,28 +38,7 @@ def home():
             
     return render_template("home.html", user=current_user)
 
-@views.route('/upload', methods=['GET', 'POST'])
-@login_required
-def upload():
-    if request.method == 'POST':
-        
-        measurement = request.files['measurement']
-        if measurement and allowed_file(measurement.filename):
-            value = pd.read_csv(measurement)
-            new_measurements = Measurement(value=measurement, user_id=current_user.id)
-            db.session.add(new_measurements)
-            db.session.commit()
-            flash('Measurement added!', category='succes')
-            #filename = secure_filename(file.filename)
-            #new_filename = f'{filename.split(".")[0]}_{str(datetime.now())}.csv'
-            #save_location = os.path.join('input', new_filename) #save_ location to tam gdzie zapisuje ten plik(do input directory), musiałam zrobić import os
-         #   file.save(save_location) 
-           # output_file = process_csv(save_location)
-             #return send_from_directory('output', output_file)
-           # return redirect(url_for('download'))
-           # return 'uploaded'
-            
-    return render_template("upload.html", user=current_user)
+
 
 @views.route('/graph', methods=['GET', 'POST'])
 @login_required
@@ -97,6 +76,7 @@ def graph():
                     print('data:', data)
   
             for ii in x: 
+                   # print('i:',i)
                     to_convert2 = re.findall(r'\d+', str(ii)) ##jak zmieniac wartosci w tym nawiasie???
                   #  converted = float(to_convert[0])
                     year = str(to_convert2[0])
@@ -123,7 +103,29 @@ def graph():
             
             return render_template("graph.html", labels = labels, values = values,  user=current_user)
 
-                    
+"""
+@views.route('/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
+    if request.method == 'POST':
+        
+        measurement = request.files['measurement']
+        if measurement and allowed_file(measurement.filename):
+            value = pd.read_csv(measurement)
+            new_measurements = Measurement(value=measurement, user_id=current_user.id)
+            db.session.add(new_measurements)
+            db.session.commit()
+            flash('Measurement added!', category='succes')
+            #filename = secure_filename(file.filename)
+            #new_filename = f'{filename.split(".")[0]}_{str(datetime.now())}.csv'
+            #save_location = os.path.join('input', new_filename) #save_ location to tam gdzie zapisuje ten plik(do input directory), musiałam zrobić import os
+         #   file.save(save_location) 
+           # output_file = process_csv(save_location)
+             #return send_from_directory('output', output_file)
+           # return redirect(url_for('download'))
+           # return 'uploaded'
+            
+    return render_template("upload.html", user=current_user)     """               
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  
@@ -134,7 +136,7 @@ def delete_note():
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
-
+""""
 @views.route('/delete-graph', methods=['POST'])
 def delete_graph():  
     graph = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
@@ -145,4 +147,4 @@ def delete_graph():
             db.session.delete(graph)
             db.session.commit()
 
-    return jsonify({})
+    return jsonify({})"""
