@@ -1,7 +1,17 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
-    <h1>Measurement</h1>
-    <ul class="list-group list-group-flush" id="measurement">
+  <!--   <h1>Measurement</h1>   -->
+     <h1>Aplikacja webowa do wizualizacji i analizy danych pomiarowych uzyskanych z czujników monitorujących dobrostan osób starszych w domu  </h1>   
+     <br />
+     <br />
+     <h2>Po przejściu do zakładki 'Graph' wyświetlą się pomiary tętna na wykresie. </h2>
+     <br />
+     <br />
+    
+     <!-- Ten tekst
+zostanie zignorowany
+przez przeglądarkę
+     <ul class="list-group list-group-flush" id="measurement">
       {% for measurement in user.measurements %}
       <li class="list-group-item">
         {{ measurement.data }}
@@ -22,9 +32,10 @@
     </form>
 
   
-    <h3>measurement ID number: </h3>
+    <h3>measurement ID number: </h3> 
 
     <h3>Plot</h3>
+     
     <ul class="list-group list-group-flush" id="plots">
     </ul>
     <form method="POST">
@@ -32,7 +43,8 @@
       <div align="center">
         <button type="submit" class="btn btn-primary">Add Plot</button>
       </div>
-    </form>
+    </form> -->
+    
 
     <h3>Notes</h3>
     <ul class="list-group list-group-flush" id="notes">
