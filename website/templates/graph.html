@@ -12,7 +12,7 @@
       {% for graph in user.graph %}
       <li class="list-group-item">
         {{ graph.data }}
-        <button type="button" class="close" onClick="deleteGraph({{ note.id }})">
+        <button type="button" class="close" onClick="deleteGraph({{ graph.id }})">
           <span aria-hidden="true">&times;</span>
         </button>
       </li>

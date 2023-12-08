@@ -12,10 +12,10 @@ class Measurement(db.Model):
    # plot = db.relationship('Plot')
    
 
-
-class Plot(db.Model):
+class Graph(db.Model):
     id = db.Column(db.Integer, primary_key=True) #unikalne identyfikowanie każdego obiektu
     values = db.Column(db.String(10000))
+    labels = db.Column(db.String(10000))
     measurement_id = db.Column(db.Integer, db.ForeignKey('measurement.id')) #patrzac na measurement_id możemy zobaczyć jaki measure to stworzył
 
 
