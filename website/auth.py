@@ -3,6 +3,14 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
+import psycopg2
+
+conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+cur = conn.cursor() 
+conn.commit() 
+cur.close() 
+conn.close() 
+
 
 
 auth = Blueprint('auth', __name__)
@@ -37,6 +45,8 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+    cur = conn.cursor()
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')
@@ -61,5 +71,11 @@ def sign_up():
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
+        zmi = "INSERT INTO patient (name, mail) VALUES ('first_name', 'email')"
+        cur.execute(zmi)
+       # cur.execute( '''INSERT INTO patient \  (name, mail, password1, password2) VALUES (%s, %s, %s, %s)''',  (first_name, email, password1, password2))
+        conn.commit() 
+        cur.close() 
+        conn.close()
 
     return render_template("sign_up.html", user=current_user)
