@@ -57,6 +57,32 @@ def graph():
                 for(values) in cur:
                     value.append(values)
 
+                min = None
+                max = None
+                mean = None
+            
+                sum = 0
+                numbers = 0
+                
+                for(values) in cur:
+                    value.append(values)
+                for n in value: 
+                    con3 = re.findall(r'\d\d+', str(n))
+                    nn = int(con3[0])
+                    sum += nn
+                # print("sum:", sum)
+                    numbers += 1 
+                    if min == None or min > n:
+                        min = n
+                        con = re.findall(r'\d\d+', str(min))
+                        min_hr = (con[0])
+                    if max == None or max < n:
+                        max = n 
+                        con2 = re.findall(r'\d\d+', str(max))
+                        max_hr = str(con2[0])
+                mean = round(sum/numbers) # round zookrągla do pełnej liczby
+                print("min: ", min_hr, "max: ", max_hr, "mean: ", mean)
+
                 query = 'SELECT measurements_date FROM measurements'
                 cur.execute(query)
                 conn.commit()
@@ -110,7 +136,7 @@ def graph():
                # flash('Graph added!', category='succes')
 
                 
-                return render_template("graph.html", labels = labels, values = values,  user=current_user, measure_day=measure_day)
+                return render_template("graph.html", labels = labels, values = values,  user=current_user, measure_day=measure_day, min=min, max=max, mean=mean)
 
 """
 @views.route('/upload', methods=['GET', 'POST'])

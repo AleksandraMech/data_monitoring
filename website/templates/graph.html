@@ -18,16 +18,20 @@
       </li>
       {% endfor %}
     </ul>
+    
     <form method="POST">
-      
-      <br />
       <div align="center">
         <button type="submit" class="btn btn-primary">Add Graph</button>
       </div>
     </form>
+    
     <br />
     <br />
     <h3>Measurement date: {{measure_day}}</h3>
+    <h4>Lowest heart rate value: {{min}}  (bpm)</h4>
+    <h4>Highest heart rate value: {{max}}  (bpm)</h4>
+    <h4>Average heart rate: {{mean}}  (bpm)</h4>
+    <!-- Jak wstawić na stronę zmienną string a nie tuple? -->
     <br />
     <br />
 

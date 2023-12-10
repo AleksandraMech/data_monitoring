@@ -39,12 +39,41 @@ def plotting():
             # ll =  cur.fetchall()
             conn.commit()
             value = [] 
-            converted_value = []
+           #converted_value = []
+            min = None
+            max = None
+            mean = None
+           
+            sum = 0
+            numbers = 0
              #zamienic krotki na liste i pozniej iterowac po liscie # tuple
             for(values) in cur:
                 #print(values) ##(' 78',)
                 value.append(values)
+                
                 #print('value: ',value) ##[(' 56',)]
+
+            for n in value: 
+                con3 = re.findall(r'\d\d+', str(n))
+                nn = int(con3[0])
+                sum += nn
+               # print("sum:", sum)
+                numbers += 1 
+
+                if min == None or min > n:
+                     min = n
+                    # print("typemin",type(min))
+                     con = re.findall(r'\d\d+', str(min))
+                     min_hr = (con[0])
+                if max == None or max < n:
+                     max = n 
+                     con2 = re.findall(r'\d\d+', str(max))
+                     max_hr = str(con2[0])
+
+            mean = sum/numbers
+            print("min: ", min_hr, "max: ", max_hr, "mean: ", mean)
+           # print("typeminn",type(min_hr))
+
 
             query = 'SELECT measurements_date FROM measurements'
             cur.execute(query)
@@ -60,6 +89,8 @@ def plotting():
           #  print('lista',value)
             data =[]
             data2 =[]
+           # data4 = [ , ]
+           
             for i in value: 
                     #print('i:',i)
                     to_convert = re.findall(r'\d\d+', str(i)) ##jak zmieniac wartosci w tym nawiasie???
@@ -68,6 +99,8 @@ def plotting():
                     print('converted:', converted)        
                     data.append(converted)
                     print('data:', data)
+                  
+
 
             
             for ii in x: 
@@ -90,9 +123,8 @@ def plotting():
                     measure_day = (day+'-'+month+'-'+year)
                     print('y: ',y,'measure day: ', measure_day) 
                     data2.append(y) 
-                    print('data2: ',data2)   
+                    print('data2: ',data2) 
 
-           
             plt.plot(data2,data)
             plt.show()
             time.sleep(3)
