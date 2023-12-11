@@ -75,13 +75,16 @@ def graph():
                     if min == None or min > n:
                         min = n
                         con = re.findall(r'\d\d+', str(min))
-                        min_hr = (con[0])
+                        min_hr = int(con[0])
                     if max == None or max < n:
                         max = n 
                         con2 = re.findall(r'\d\d+', str(max))
                         max_hr = str(con2[0])
                 mean = round(sum/numbers) # round zookrągla do pełnej liczby
-                print("min: ", min_hr, "max: ", max_hr, "mean: ", mean)
+                print("min: ", min, "max: ", max, "mean: ", mean)
+                print("typemin",type(min),"typemax: ", type(max), "typemean: ", type(mean) )
+                print("minhr: ", min_hr, "maxhr: ", max_hr, "mean: ", mean)
+                print("typeminhr",type(min_hr),"typemaxhr: ", type(max_hr), "typemean: ", type(mean) )
 
                 query = 'SELECT measurements_date FROM measurements'
                 cur.execute(query)
@@ -129,6 +132,7 @@ def graph():
                 #values = [row[1] for row in data]
                 labels = data2
                 values = data
+                #czy dzielic utworzone listy na fragmenty np 20 zmiennych, czy tworzyć listy 20 elementowe
 
              #   new_graph = Graph(data=note, user_id=current_user.id)
               #  db.session.add(new_graph)
@@ -136,7 +140,7 @@ def graph():
                # flash('Graph added!', category='succes')
 
                 
-                return render_template("graph.html", labels = labels, values = values,  user=current_user, measure_day=measure_day, min=min, max=max, mean=mean)
+                return render_template("graph.html", labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
 
 """
 @views.route('/upload', methods=['GET', 'POST'])

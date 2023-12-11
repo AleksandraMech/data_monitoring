@@ -31,11 +31,12 @@ while(True):
     message = f" {measure}"
     
     class Measure:
-       def __init__(self, device, values):
+       def __init__(self, device, values, patient_id):
           self.device = device
           self.values = values
+          self.patient_id = patient_id
 
-    p1 = Measure("bathtube", message)
+    p1 = Measure("bathtube", message, "11")
     with open("plik.json", "a") as plik:
         json_string = json.dumps(p1.__dict__)
        # print(json_string)

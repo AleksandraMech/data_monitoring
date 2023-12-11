@@ -66,14 +66,16 @@ def sign_up():
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
+          #  zmi = "INSERT INTO patient (name, mail) VALUES ('first_name', 'email')"
+            zmi = "INSERT INTO patient (name, mail) VALUES (\'"+first_name+"\', '"+email+"')"
+            cur.execute(zmi)
+          #  cur.execute( '''INSERT INTO patient \  (name, mail, password1, password2) VALUES (%s, %s, %s, %s)''',  (first_name, email, password1, password2))
+            conn.commit() 
+            cur.close() 
+            conn.close()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
-       # zmi = "INSERT INTO patient (name, mail) VALUES ('first_name', 'email')"
-      #  cur.execute(zmi)
-       # cur.execute( '''INSERT INTO patient \  (name, mail, password1, password2) VALUES (%s, %s, %s, %s)''',  (first_name, email, password1, password2))
-      #  conn.commit() 
-      #  cur.close() 
-      #  conn.close()
+        
 
     return render_template("sign_up.html", user=current_user)

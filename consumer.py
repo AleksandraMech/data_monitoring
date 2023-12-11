@@ -42,11 +42,18 @@ def on_message_received(ch, method, properties, body):
                # cur.execute("INSERT INTO measurements (value) VALUES ('{\"values\": \"line\"}')") 
               #  zm = "INSERT INTO measurements (json_info) VALUES (%(line)s)" 
                 zm = "INSERT INTO measurements (json_info, measurements_date) VALUES (\'"+str(line)+"\', '"+now+"')"
-                print(zm)  ## zrobic to za pomocą formatowanego stringa
+                #print(zm)  ## zrobic to za pomocą formatowanego stringa
                 #cur.execute("INSERT INTO measurements (json_info) VALUES ('",str(json_string),"')")
                 cur.execute(zm)
                 print(f'{line} is received')
 
+                patient_id= "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
+                cur.execute(patient_id)
+                conn.commit()
+                for(patient_id) in cur:
+                  x = f'id pacjenta: {patient_id}'
+                  print(x)
+               
                 otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
                 cur.execute(otrzymane)
                 conn.commit()
