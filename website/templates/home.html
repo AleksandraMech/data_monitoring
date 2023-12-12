@@ -4,9 +4,9 @@
      <strong><h1>Web application for the visualization and analysis of measurement data from self-monitoring sensors the well-being of the elderly in home    </h1></strong>   
      <br />
      <br />
-     <h2>After clicking the 'Graph' tab, heart rate measurements will be displayed on a graph. </h2>
+     <h3>After clicking the 'Graph' tab, heart rate measurements will be displayed on a graph. </h3>
      <br />
-     <br />
+     
     
      <!-- Ten tekst
 zostanie zignorowany
@@ -44,8 +44,11 @@ przez przeglądarkę
         <button type="submit" class="btn btn-primary">Add Plot</button>
       </div>
     </form> -->
-    
-
+    <h5>Dane użytkownika: </h5> 
+    <h5>User name: {{ user_name}}</h5>
+    <h5>User id: {{user_id}}</h5> 
+    <br />
+    <br />
     <h3>Notes</h3>
     <ul class="list-group list-group-flush" id="notes">
       {% for note in user.notes %}

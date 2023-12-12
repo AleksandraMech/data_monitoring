@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from script_process_csv import process_csv
-from .models import Note
+from .models import Note, Graph
 from . import db
 from .models import Measurement
 import json
@@ -16,11 +16,6 @@ import numpy as np
 
 
 views = Blueprint('views', __name__)
-"""
-ALLOWED_EXTENSIONS = set(['csv'])
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS """
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -35,32 +30,35 @@ def home():
             db.session.add(new_note)
             db.session.commit()
             flash('Note added!', category='succes')
+    user_id=current_user.id
+    user_name=current_user.first_name
             
-    return render_template("home.html", user=current_user)
-
+   # return render_template("home.html", user=current_user)
+    return render_template("home.html", user=current_user,  user_id=user_id, user_name=user_name)
 
 
 @views.route('/graph', methods=['GET', 'POST'])
 @login_required
 def graph():
+        #user_id=current_user.id
      #if request.method == 'POST':
      #   graph = request.form.get('graph')
         while True:     
             conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+           # if conn != None and user_id == 24:
             if conn != None:
                 cur = conn.cursor()
                 otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
                 cur.execute(otrzymane)
                 conn.commit()
                 value = [] 
-                converted_value = []
-                for(values) in cur:
-                    value.append(values)
+                #converted_value = []
+                #for(values) in cur:
+                  #  value.append(values)
 
                 min = None
                 max = None
                 mean = None
-            
                 sum = 0
                 numbers = 0
                 
@@ -90,11 +88,10 @@ def graph():
                 cur.execute(query)
                 conn.commit()
                 x = [] 
-                converted_value = []
+               # converted_value = []
                 for(measurements_date) in cur:
                     x.append(measurements_date)
-                cur.close()
-                conn.close()       
+                     
 
                 data =[]
                 data2 =[]
@@ -127,44 +124,32 @@ def graph():
                         print('y: ',y,'measure day: ', measure_day) 
                         data2.append(y) 
                         print('data2: ',data2) 
-
-             #   labels = [row[4] for row in data2]
-                #values = [row[1] for row in data]
                 labels = data2
                 values = data
+
+               # patients_id = []
+              #  for(patient_id) in cur:
+              #      patients_id.append(patient_id)
+              #      print(patients_id)
+  
+              ##  new_graph = Graph(values=values, labels=labels, user_id=current_user.id)
+               # db.session.add(new_graph)
+                #db.session.commit()
+               # flash('Measurement added!', category='succes')
                 #czy dzielic utworzone listy na fragmenty np 20 zmiennych, czy tworzyć listy 20 elementowe
 
-             #   new_graph = Graph(data=note, user_id=current_user.id)
+             #   new_graph = Graph(data=graph, user_id=current_user.id)
               #  db.session.add(new_graph)
               #  db.session.commit()
                # flash('Graph added!', category='succes')
+                cur.close()
+                conn.close()
+                 
 
                 
                 return render_template("graph.html", labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
 
-"""
-@views.route('/upload', methods=['GET', 'POST'])
-@login_required
-def upload():
-    if request.method == 'POST':
-        
-        measurement = request.files['measurement']
-        if measurement and allowed_file(measurement.filename):
-            value = pd.read_csv(measurement)
-            new_measurements = Measurement(value=measurement, user_id=current_user.id)
-            db.session.add(new_measurements)
-            db.session.commit()
-            flash('Measurement added!', category='succes')
-            #filename = secure_filename(file.filename)
-            #new_filename = f'{filename.split(".")[0]}_{str(datetime.now())}.csv'
-            #save_location = os.path.join('input', new_filename) #save_ location to tam gdzie zapisuje ten plik(do input directory), musiałam zrobić import os
-         #   file.save(save_location) 
-           # output_file = process_csv(save_location)
-             #return send_from_directory('output', output_file)
-           # return redirect(url_for('download'))
-           # return 'uploaded'
-            
-    return render_template("upload.html", user=current_user)     """               
+             
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():  

@@ -6,12 +6,16 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
+#DB_NAME = "data_monitoring"
 
 
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+     #app.config["SQLALCHEMY_DATABASE_URI"] = f'sqlite:///{DB_NAME}'
+     #psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+     # conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
   # cur = con.cursor()
     db.init_app(app)
 
