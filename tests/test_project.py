@@ -17,7 +17,7 @@ def test_signing_up(client, app): ##wszystkie testy musza sie zaczynac test
   #  response = client.post("/sign_up", data={"email": "test@test.com", "first_name": "firstname", "password": "testpassword", "password": "testpassword"})
 
     with app.app_context():
-        assert User.query.count() == 12
+        assert User.query.count() == 24
         assert User.query.first().email == "olamech2001@wp.pl" ## juz mam użytkownika nr 1 i jest to olamech2001
 
 """@responses.activate # it allow to mock some requests

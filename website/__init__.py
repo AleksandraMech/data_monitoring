@@ -9,7 +9,7 @@ DB_NAME = "database.db"
 #DB_NAME = "data_monitoring"
 
 
-def create_app():
+def create_app(database_uri="sqlite:///database.db"):
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
@@ -46,6 +46,6 @@ def create_app():
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
-        db.create_all(app=app)
+        db.create_all(app)
         print('Created Database!')
 
