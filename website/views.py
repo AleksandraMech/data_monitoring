@@ -126,6 +126,7 @@ def graph():
                         print('data2: ',data2) 
                 labels = data2
                 values = data
+                
 
                # patients_id = []
               #  for(patient_id) in cur:
@@ -183,3 +184,11 @@ def admin():
 	else:
 		flash("Sorry you must be the Admin to access the Admin Page...")
 		return redirect(url_for('dashboard')) '''
+
+@views.route('/user', methods=['GET', 'POST'])
+@login_required
+def user():
+    user_id=current_user.id
+    user_name=current_user.first_name
+    user_email=current_user.email
+    return render_template("user.html", user=current_user,  user_id=user_id, user_name=user_name, user_email=user_email)

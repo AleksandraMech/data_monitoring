@@ -99,6 +99,7 @@ def plotting():
                     print('converted:', converted)        
                     data.append(converted)
                     print('data:', data)
+                   # ostatnie_dwadziescia = 
                   
 
 

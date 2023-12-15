@@ -8,16 +8,16 @@ from playwright.sync_api import expect
 #global test_home_page_loads
 
 #test sie nie uda bo mam {% block title %}Home{% endblock %} {% block content %} zamiast  <title>Home</title>
-#def test_home(client):
-   # response = client.get("/home")
-   # assert b"<title>Home</title>" in response.data #sprawdzam czy mam home w pasku karty # b to typ bite
+def test_home(client):
+    response = client.get("/home")
+    assert b"<title>Home</title>" in response.data #sprawdzam czy mam home w pasku karty # b to typ bite
 
 
 def test_signing_up(client, app): ##wszystkie testy musza sie zaczynac test
   #  response = client.post("/sign_up", data={"email": "test@test.com", "first_name": "firstname", "password": "testpassword", "password": "testpassword"})
 
     with app.app_context():
-        assert User.query.count() == 12
+        assert User.query.count() == 24
         assert User.query.first().email == "olamech2001@wp.pl" ## juz mam użytkownika nr 1 i jest to olamech2001
 
 """@responses.activate # it allow to mock some requests

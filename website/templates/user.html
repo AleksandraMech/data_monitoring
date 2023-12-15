@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+<form action="/user" method="POST" enctype="multipart/form-data">
+    <h3>Dane użytkownika: </h3> 
+    <h5>User name: {{ user_name}}</h5>
+    <h5>User id: {{user_id}}</h5> 
+    <h5>User email: {{user_email}}</h5> 
+</form>
+
+{% endblock %}
