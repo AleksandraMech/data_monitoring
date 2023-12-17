@@ -50,9 +50,9 @@ przez przeglądarkę
     <br />
     <br />-->
     <h3>Notes</h3>
-    <ul class="list-group list-group-flush" id="notes">
+    <ul class="list-group list-group-flush" id="notes" >
       {% for note in user.notes %}
-      <li class="list-group-item">
+      <li class="list-group-item" style="background-color:#DDDDDD">
         {{ note.data }}
         <button type="button" class="close" onClick="deleteNote({{ note.id }})">
           <span aria-hidden="true">&times;</span>
@@ -61,7 +61,7 @@ przez przeglądarkę
       {% endfor %}
     </ul>
     <form method="POST">
-      <textarea name="note" id="note" class="form-control"></textarea>
+      <textarea name="note" id="note" class="form-control" style="background-color:#DDDDDD"></textarea>
       <br />
       <div align="center">
         <button type="submit" class="btn btn-primary">Add Note</button>

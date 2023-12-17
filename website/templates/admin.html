@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+<form action="/admin" method="POST" enctype="multipart/form-data">
+    
+    <h5>Id: {{user_id}} - dostęp Administratora</h5>  
+    <br />
+    <h5>Aktualni użytkownicy zapisani w bazie danych: </h5>  
+   <!--  <h5>patient_name: {{patient_name}}</h5> 
+    <h5>patient_names: {{patient_names}}</h5> --> 
+    <table bgcolor="black" width="500">
+        <tr bgcolor="grey" align="center" >
+            {% for header in headings %}
+            <th>{{ header}}</th>
+            {% endfor %}
+        </tr>
+        {% for i in range (0,100) %}
+        <tr bgcolor="lightgrey" align="center">
+                 <td>{{patients_id[i]}}</td><td>{{patient_names[i]}}</td><td>{{patient_mails[i]}}</td> 
+        </tr>
+        {% endfor %}
+
+    </table>
+   
+    
+</form>
+
+{% endblock %}
