@@ -25,9 +25,6 @@ while(True):
     measure = random.randint(55, 90)
     measure_time = datetime.datetime.now()
     measurement_device = "bathtub"
-
-   # message = f"Sending Message Id: {messageId}, measure: {measure}, measure time: {measure_time}, measurement device: {measurement_device} "
-  #  message = f"{messageId}, {measure}, {measure_time}, {measurement_device} "
     message = f" {measure}"
     
     class Measure:

@@ -172,10 +172,6 @@ def admin():
                 cur = conn.cursor()
 
                 patient_id = 'SELECT patient_id FROM patient'
-
-                
-
-
                 cur.execute(patient_id)
                 #print(patient_id)
                 patients_id = [] 
@@ -204,16 +200,14 @@ def admin():
                     mail =  "".join(mails)
                     patient_mails.append(mail)
                 print(' patient_mails : ', patient_mails) #lista
-             
-
-
                 headings = ['Patient id', 'Name', 'Mail']
-
-
                 return render_template("admin.html",  patient_mails=patient_mails, patients_id=patients_id, headings=headings, patient_names=patient_names, user=current_user,  user_id=user_id,   patient_name=patient_name)
     else:
-         flash("Sorry you must be the Admin to access the Admin Page...")
-         return redirect(url_for('home.html')) 
+        # user_id=current_user.id
+        # flash("Sorry you must be the Admin to access the Admin Page...")
+        # return redirect(url_for('admin2.html')) 
+         return render_template('admin2.html', user=current_user)
+    
 
 @views.route('/user', methods=['GET', 'POST'])
 @login_required

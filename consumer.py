@@ -52,7 +52,7 @@ def on_message_received(ch, method, properties, body):
                 conn.commit()
                 for(patient_id) in cur:
                   x = f'id pacjenta: {patient_id}'
-                  print(x)
+                #  print(x)
                
                 otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
                 cur.execute(otrzymane)
