@@ -74,6 +74,28 @@ def plotting():
             print("min: ", min_hr, "max: ", max_hr, "mean: ", mean)
            # print("typeminn",type(min_hr))
            ############################################
+            
+         
+                    
+            id = 'SELECT patient_id FROM measurements'
+            cur.execute(id)
+            patient_id_nr = [] 
+            for(nr) in cur:
+                patient_id_numbers = "".join(str(nr))
+                patient_id_nr.append(patient_id_numbers)
+                print('patient id number: ', patient_id_nr)
+            dane =[]
+            for k in patient_id_nr:
+                to_convert2 = re.findall(r'\d\d+', str(k)) ##jak zmieniac wartosci w tym nawiasie???
+                converted2 = str(to_convert2[0])     
+                dane.append(converted2)    
+                if converted2 == 24:
+                    print('tak')
+                else:
+                    print('nie')
+                    
+            
+            
 
             patient_id = 'SELECT patient_id FROM patient'
             cur.execute(patient_id)
@@ -83,6 +105,8 @@ def plotting():
                 id =  "".join(str(patient_id))
                 patients_id.append(id)
             print(' patient_id : ',  patients_id) #lista
+
+           
                 
             names= 'SELECT name FROM patient'
             cur.execute(names)
@@ -147,7 +171,7 @@ def plotting():
                     hour = str(to_convert2[3])
                     minute = str(to_convert2[4])
                     second = str(to_convert2[5])
-                  #  print('year:', year)  
+                   # print('year:', year)  
                   #  print('month:', month)  
                   #  print('day:', day)  
                    # print('hour:', hour) 
