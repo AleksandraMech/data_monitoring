@@ -49,7 +49,7 @@ def graph():
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
 
-                id = 'SELECT patient_id FROM measurements'
+                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
                 cur.execute(id)
                 patient_id_nr = [] 
                 for(nr) in cur:
