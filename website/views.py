@@ -56,8 +56,8 @@ def graph():
                     patient_id_numbers = "".join(str(nr))
                     patient_id_nr.append(patient_id_numbers)
                     print('patient id number: ', patient_id_nr)
-                    if 1==1:
-                   ### if user_id == patient_id_nr:
+                  #  if 1==1:
+                    if user_id == patient_id_nr:
                         #pobranie danych odnośnie pomiarów z bazy danych
                         otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
                         cur.execute(otrzymane)
@@ -139,8 +139,8 @@ def graph():
                         cur.close()
                         conn.close()                
                         return render_template("graph.html", measurement_device=measurement_device, labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
-                   ### else:
-                      ###  return render_template('nographs.html', user=current_user)
+                    else:
+                        return render_template('nographs.html', user=current_user)
                 
 
 @views.route('/delete-note', methods=['POST'])
