@@ -42,6 +42,7 @@ def home():
 
 def graph():
         user_id=current_user.id
+        user_name = current_user.first_name
         while True:     
             conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
            # if conn != None and user_id == 24:
@@ -53,13 +54,16 @@ def graph():
                 cur.execute(id)
                 patient_id_nr = [] 
                 for(nr) in cur:
-                    patient_id_numbers = "".join(str(nr))
-                    patient_id_nr.append(patient_id_numbers)
-                    print('patient id number: ', patient_id_nr)
-                  #  if 1==1:
-                    if user_id == patient_id_nr:
+                    #patient_id_numbers = "".join(str(nr))
+                   # patient_id_nr.append(patient_id_numbers)
+                    patient_id_nr.append(nr)
+                    patient_id_numbers =  "".join(nr)
+                patient_id_number = patient_id_numbers
+                if 1==1:
+                    #if 1==1:
+                    if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
-                        otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
+                        otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements" 
                         cur.execute(otrzymane)
                         conn.commit()
                         value = [] 
@@ -68,9 +72,9 @@ def graph():
                         mean = None
                         sum = 0
                         numbers = 0
-                        for(values) in cur:
-                            value.append(values)
-                        for n in value: 
+                        for(HR) in cur:
+                            value.append(HR)
+                        for n in HR: 
                             con3 = re.findall(r'\d\d+', str(n))
                             nn = int(con3[0])
                             sum += nn
@@ -84,12 +88,12 @@ def graph():
                                 con2 = re.findall(r'\d\d+', str(max))
                                 max_hr = str(con2[0])
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
-                        devicefromtable = "SELECT json_info -> 'device' as keyvalues FROM measurements" 
+                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements" 
                         cur.execute(devicefromtable)
                         devices = [] 
-                        for(device) in cur:
-                            devices.append(device)
-                            measurement_devices =  "".join(device)
+                        for(context) in cur:
+                            devices.append(context)
+                            measurement_devices =  "".join(context)
                         measurement_device = measurement_devices
                         print('measurement device: ', measurement_device)
         
@@ -140,7 +144,7 @@ def graph():
                         conn.close()                
                         return render_template("graph.html", measurement_device=measurement_device, labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
-                        return render_template('nographs.html', user=current_user)
+                        return render_template('nographs.html', user_first_name=user_name, user=user_id)
                 
 
 @views.route('/delete-note', methods=['POST'])
@@ -170,6 +174,7 @@ def delete_graph():
 @login_required
 def admin():
     user_id=current_user.id
+    user_name = current_user.first_name
     if user_id == 24: 
         while True:     
             conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
@@ -211,7 +216,7 @@ def admin():
         # user_id=current_user.id
         # flash("Sorry you must be the Admin to access the Admin Page...")
         # return redirect(url_for('admin2.html')) 
-         return render_template('admin2.html', user=current_user)
+         return render_template('admin2.html', user_first_name=user_name, user=current_user)
     
 
 @views.route('/user', methods=['GET', 'POST'])

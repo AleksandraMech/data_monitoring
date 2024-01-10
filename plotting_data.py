@@ -34,7 +34,7 @@ def plotting():
         conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
         if conn != None:
             cur = conn.cursor()
-            otrzymane = "SELECT json_info -> 'values' as keyvalues FROM measurements" 
+            otrzymane = "SELECT json_info -> 'heart_rate' as keyvalues FROM measurements" 
             cur.execute(otrzymane)
             # ll =  cur.fetchall()
             conn.commit()
@@ -75,9 +75,24 @@ def plotting():
            # print("typeminn",type(min_hr))
            ############################################
             
-         
+            query = 'SELECT measurements_date FROM measurements'
+            cur.execute(query)
+            conn.commit()
+            x = [] 
+            for(measurements_date) in cur:
+                x.append(measurements_date)
+           # cur.close()
+            #conn.close()       
+            data =[]
+            data2 =[]
+           
+            for i in value: 
+                    to_convert = re.findall(r'\d\d+', str(i)) ##jak zmieniac wartosci w tym nawiasie???
+                    converted = str(to_convert[0])
+                    #print('converted:', converted)        
+                    data.append(converted)
                     
-            id = 'SELECT patient_id FROM measurements'
+            id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
             cur.execute(id)
             patient_id_nr = [] 
             for(nr) in cur:
@@ -87,7 +102,7 @@ def plotting():
             dane =[]
             for k in patient_id_nr:
                 to_convert2 = re.findall(r'\d\d+', str(k)) ##jak zmieniac wartosci w tym nawiasie???
-                converted2 = str(to_convert2[0])     
+                converted2 = str(to_convert[0])     
                 dane.append(converted2)    
                 if converted2 == 24:
                     print('tak')
@@ -171,7 +186,7 @@ def plotting():
                     hour = str(to_convert2[3])
                     minute = str(to_convert2[4])
                     second = str(to_convert2[5])
-                   # print('year:', year)  
+                    print('year:', year)  
                   #  print('month:', month)  
                   #  print('day:', day)  
                    # print('hour:', hour) 

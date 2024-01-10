@@ -1,7 +1,12 @@
+
+
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
-     
-    <br />
-    <h5>Sorry your id is: {{user}} and you must be the Admin to access the Admin Page... </h5>    
+<form action="/admin2" method="POST" enctype="multipart/form-data">
     
+    <br />
+    <h5>Sorry  {{user_first_name}},  you must be the Admin to access the Admin Page... </h5>    
+    
+</form>
+
 {% endblock %}

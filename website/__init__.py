@@ -14,10 +14,6 @@ def create_app(database_uri="sqlite:///database.db"):
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-     #app.config["SQLALCHEMY_DATABASE_URI"] = f'sqlite:///{DB_NAME}'
-     #psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
-     # conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
-  # cur = con.cursor()
     db.init_app(app)
 
 
