@@ -14,7 +14,6 @@ import re
 import numpy as np
 
 
-
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['GET', 'POST'])
@@ -32,8 +31,7 @@ def home():
             flash('Note added!', category='succes')
     user_id=current_user.id
     user_name=current_user.first_name
-            
-   # return render_template("home.html", user=current_user)
+
     return render_template("home.html", user=current_user,  user_id=user_id, user_name=user_name)
 
 
@@ -49,13 +47,10 @@ def graph():
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
-
                 id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
                 cur.execute(id)
                 patient_id_nr = [] 
                 for(nr) in cur:
-                    #patient_id_numbers = "".join(str(nr))
-                   # patient_id_nr.append(patient_id_numbers)
                     patient_id_nr.append(nr)
                     patient_id_numbers =  "".join(nr)
                 patient_id_number = patient_id_numbers
@@ -102,25 +97,19 @@ def graph():
                         cur.execute(query)
                         conn.commit()
                         x = [] 
-                    # converted_value = []
                         for(measurements_date) in cur:
                             x.append(measurements_date)
-                        ## measurement_time =  "".join(measurements_date)
-                        # print('meesure time: ', measurement_time)
                         data =[]
                         data2 =[]
                         for i in value: 
-                                to_convert = re.findall(r'\d\d+', str(i)) ##jak zmieniac wartosci w tym nawiasie???
-                            #  converted = float(to_convert[0])
+                                to_convert = re.findall(r'\d\d+', str(i)) 
                                 converted = str(to_convert[0])
                                 print('converted:', converted)        
                                 data.append(converted)
                                 print('data:', data)
             
                         for ii in x: 
-                        # sprobowac zamienic to na date
-                            # print('i:',i)
-                                to_convert2 = re.findall(r'\d+', str(ii)) ##jak zmieniac wartosci w tym nawiasie???
+                                to_convert2 = re.findall(r'\d+', str(ii))
                                 print('to convert',to_convert)
                                 year = str(to_convert2[0])
                                 month = str(to_convert2[1])
@@ -135,11 +124,10 @@ def graph():
                                 print('data2: ',data2) 
                         labels = data2
                         values = data       
-                        
-                    #   new_graph = Graph(data=graph, user_id=current_user.id)
-                    #  db.session.add(new_graph)
-                    #  db.session.commit()
-                    # flash('Graph added!', category='succes')
+                        #   new_graph = Graph(data=graph, user_id=current_user.id)
+                        #  db.session.add(new_graph)
+                        #  db.session.commit()
+                        # flash('Graph added!', category='succes')
                         cur.close()
                         conn.close()                
                         return render_template("graph.html", measurement_device=measurement_device, labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
@@ -156,18 +144,7 @@ def delete_note():
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
-""""
-@views.route('/delete-graph', methods=['POST'])
-def delete_graph():  
-    graph = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
-    graphId = graph['graphId']
-    graph = Graph.query.get(graphId)
-    if graph:
-        if graph.user_id == current_user.id:
-            db.session.delete(graph)
-            db.session.commit()
 
-    return jsonify({})"""
 
 # Create Admin Page
 @views.route('/admin', methods=['GET', 'POST'])
@@ -186,16 +163,12 @@ def admin():
                 #print(patient_id)
                 patients_id = [] 
                 for(patient_id) in cur:    
-                    convert = re.findall(r'\d\d+', str(patient_id)) ##jak zmieniac wartosci w tym nawiasie???
+                    convert = re.findall(r'\d\d+', str(patient_id)) 
                     converted = str(convert[0])
                     patients_id.append(converted)   
-                   # id =  "".join(str(patient_id))
-                   # patients_id.append(id)
-              #  print(' patient_id : ',  patients_id) #lista
                     
                 names= 'SELECT name FROM patient'
                 cur.execute(names)
-            # print(names)
                 patient_names = [] 
                 for(names) in cur:         
                     patient_name =  "".join(names)
@@ -204,7 +177,6 @@ def admin():
                         
                 mails= 'SELECT mail FROM patient'
                 cur.execute(mails)
-            # print(mails)
                 patient_mails = [] 
                 for(mails) in cur:         
                     mail =  "".join(mails)
@@ -213,9 +185,6 @@ def admin():
                 headings = ['Patient id', 'Name', 'Mail']
                 return render_template("admin.html",  patient_mails=patient_mails, patients_id=patients_id, headings=headings, patient_names=patient_names, user=current_user,  user_id=user_id,   patient_name=patient_name)
     else:
-        # user_id=current_user.id
-        # flash("Sorry you must be the Admin to access the Admin Page...")
-        # return redirect(url_for('admin2.html')) 
          return render_template('admin2.html', user_first_name=user_name, user=current_user)
     
 

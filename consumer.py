@@ -42,19 +42,14 @@ def on_message_received(ch, method, properties, body):
                 conn.commit()
                 for(patient_id) in cur:
                   x = f'id pacjenta: {patient_id}'
-                #  print(x)
-               
                 otrzymane = "SELECT json_info -> 'heart_rate' as keyvalues FROM measurements" 
                 cur.execute(otrzymane)
                 conn.commit()
-
                 for(heart_rate) in cur:
                   x = f'{heart_rate}'
                   print(x)
                 cur.close()
                 conn.close()
-               # print(f'Otrzymane: {otrzymane}')
-
                 break
              except Exception as err:
                 print_exception(err)

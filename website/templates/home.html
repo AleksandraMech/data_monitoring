@@ -8,9 +8,7 @@
      <br />
      
     
-     <!-- Ten tekst
-zostanie zignorowany
-przez przeglądarkę
+     <!-- 
      <ul class="list-group list-group-flush" id="measurement">
       {% for measurement in user.measurements %}
       <li class="list-group-item">
@@ -20,9 +18,7 @@ przez przeglądarkę
         </button>
       </li>
       {% endfor %}
-
     </ul>
-
     <form method="POST" enctype="multipart/form-data">
       <br />
       <input type="file" id="file" name="file"><br />
@@ -30,25 +26,7 @@ przez przeglądarkę
       <button type="submit" class="btn btn-primary">Add Measurement</button>
       </div>
     </form>
-
-  
-    <h3>measurement ID number: </h3> 
-
-    <h3>Plot</h3>
-     
-    <ul class="list-group list-group-flush" id="plots">
-    </ul>
-    <form method="POST">
-      <br />
-      <div align="center">
-        <button type="submit" class="btn btn-primary">Add Plot</button>
-      </div>
-    </form> 
-    <h5>Dane użytkownika: </h5> 
-    <h5>User name: {{ user_name}}</h5>
-    <h5>User id: {{user_id}}</h5> 
-    <br />
-    <br />-->
+  >-->
     <h3>Notes</h3>
     <ul class="list-group list-group-flush" id="notes" >
       {% for note in user.notes %}

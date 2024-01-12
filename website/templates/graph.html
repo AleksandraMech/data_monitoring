@@ -1,12 +1,9 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
     <head>
-     <!--   <h1>Graph </h1> -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>"
     </head>
     <body>
-        
-
 
     <ul class="list-group list-group-flush" id="graph">
       {% for graph in user.graph %}
@@ -55,8 +52,5 @@
          }   
      });
     </script>
-     
     </body>
-   
-
     {% endblock %}

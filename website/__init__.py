@@ -2,14 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-#import psycopg2
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
 #DB_NAME = "data_monitoring"
 
 
-#def create_app():
 def create_app(database_uri="sqlite:///database.db"):
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "hjshjhdjah kjshkjdhjs"
@@ -19,7 +17,6 @@ def create_app(database_uri="sqlite:///database.db"):
 
     from .views import views
     from .auth import auth
-   # from .plotting import plotting
 
 
     app.register_blueprint(views, url_prefix='/')

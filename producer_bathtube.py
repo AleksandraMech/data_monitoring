@@ -1,7 +1,6 @@
 import pika
 import time
 import random
-#import csv
 import datetime
 import json
 
@@ -30,7 +29,6 @@ while(True):
     p1 = Measure("24", "amech", "bathtube", "data", "measure", message)
     with open("plik.json", "a") as plik:
         json_string = json.dumps(p1.__dict__)
-       # print(json_string)
         plik.write(json_string)
 
     channel.basic_publish(exchange='', routing_key='measurement_data', body=json_string)
