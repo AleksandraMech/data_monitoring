@@ -60,7 +60,6 @@ def test_sign_up_add_note(live_server, page):
     page.get_by_placeholder("Confirm password").click()
     page.get_by_placeholder("Confirm password").fill("password")
     page.get_by_role("button", name="Submit").click()
-
     page.locator("#note").click()
     page.locator("#note").fill("Testowe dodanie notatki")
     page.get_by_role("button", name="Add Note").click() '''

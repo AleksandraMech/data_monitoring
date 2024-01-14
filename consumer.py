@@ -28,14 +28,18 @@ def on_message_received(ch, method, properties, body):
     json_info = line.replace("\'","\"")
 
     while(1):
+     #  pomiar = 0
        try: 
           conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
           if conn != None:
              cur = conn.cursor()
              now = datetime.datetime.now().isoformat(' ', 'seconds')
+            # pomiar = pomiar+1
+             #print("pomiar", pomiar )
              try:
-                zm = "INSERT INTO measurements (json_info, measurements_date) VALUES (\'"+str(line)+"\', '"+now+"')"
+                zm = "INSERT INTO measurements (json_info, measurements_date) VALUES ( \'"+str(line)+"\', '"+now+"')"
                 cur.execute(zm)
+               
                 print(f'{line} is received')
                 patient_id= "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
                 cur.execute(patient_id)

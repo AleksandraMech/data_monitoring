@@ -26,6 +26,7 @@ def print_exception(err):
 
 
 def plotting():
+    pomiar = 0
     while True:     
         conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
         if conn != None:
@@ -33,6 +34,8 @@ def plotting():
             otrzymane = "SELECT json_info -> 'heart_rate' as keyvalues FROM measurements" 
             cur.execute(otrzymane)
             conn.commit()
+            pomiar = pomiar+1
+            print("pomiar", pomiar )
             value = [] 
             min = None
             max = None
