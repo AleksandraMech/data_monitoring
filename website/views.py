@@ -69,7 +69,7 @@ def graph():
                         numbers = 0
                         for(HR) in cur:
                             value.append(HR)
-                        for n in HR: 
+                        for n in value: 
                             con3 = re.findall(r'\d\d+', str(n))
                             nn = int(con3[0])
                             sum += nn
@@ -83,7 +83,7 @@ def graph():
                                 con2 = re.findall(r'\d\d+', str(max))
                                 max_hr = str(con2[0])
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
-                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements" 
+                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements order by measurements_id asc limit 10 " 
                         cur.execute(devicefromtable)
                         devices = [] 
                         for(context) in cur:
@@ -93,12 +93,12 @@ def graph():
                         print('measurement device: ', measurement_device)
         
                         #pobranie daty z bazy danych
-                        query = 'SELECT measurements_date FROM measurements'
+                        query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id asc limit 10" 
                         cur.execute(query)
                         conn.commit()
                         x = [] 
-                        for(measurements_date) in cur:
-                            x.append(measurements_date)
+                        for(measurement_time) in cur:
+                            x.append(measurement_time)
                         data =[]
                         data2 =[]
                         for i in value: 

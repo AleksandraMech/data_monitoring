@@ -15,18 +15,20 @@ while(True):
     measure_time = datetime.datetime.now()
     measurement_device = "bathtub"
     message = f" {measure}"
+    now = datetime.datetime.now().isoformat(' ', 'seconds')
 
     class Measure:
-      def __init__(self, patient_id, sender, context, messageType, answerType, HR):
+      def __init__(self, patient_id, sender, context, messageType, answerType, HR, measurement_time):
          self.patient_id = patient_id
          self.sender = sender
          self.context = context
          self.messageType = messageType
          self.answerType = answerType
          self.HR = HR
+         self.measurement_time = measurement_time
 
 
-    p1 = Measure("24", "amech", "bathtube", "data", "measure", message)
+    p1 = Measure("24", "amech", "bathtube", "data", "measure", message, now)
     with open("plik.json", "a") as plik:
         json_string = json.dumps(p1.__dict__)
         plik.write(json_string)
