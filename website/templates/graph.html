@@ -2,6 +2,7 @@
     %}
     <head>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>"
+        <script type="text/javascript" src="https://livejs.com/live.js"></script>
     </head>
     <body>
 
@@ -28,11 +29,23 @@
     <h5>Lowest heart rate value: {{min_hr}}  (bpm)</h5>
     <h5>Highest heart rate value: {{max_hr}}  (bpm)</h5>
     <h5>Average heart rate: {{mean}}  (bpm)</h5>
+    <h5>data5: {{data5}} </h5>
+    
+
+
     <br />
+    <form method="POST">
+      
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">wybierz date</button>
+      </div>
+    </form>
 
  <!-- 
-    <meta http-equiv="refresh" content="1">
-    </form> -->
+    <meta http-equiv="refresh" content="3">
+ </form> -->
+  
 
     <canvas id="lineChart" width="900" height="400"></canvas>
     <script >

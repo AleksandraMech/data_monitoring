@@ -58,7 +58,7 @@ def graph():
                     #if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
-                        otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements" 
+                        otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                         cur.execute(otrzymane)
                         conn.commit()
                         value = [] 
@@ -68,7 +68,7 @@ def graph():
                         sum = 0
                         numbers = 0
                         for(HR) in cur:
-                          #  value.append(HR)
+                           # value.append(HR)
                             value.insert(0,HR)
                         for n in value: 
                             con3 = re.findall(r'\d\d+', str(n))
@@ -84,33 +84,34 @@ def graph():
                                 con2 = re.findall(r'\d\d+', str(max))
                                 max_hr = str(con2[0])
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
-                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements order by measurements_id desc limit 10 " 
+                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements order by measurements_id desc limit 20 " 
                         cur.execute(devicefromtable)
                         devices = [] 
                         for(context) in cur:
-                           # devices.append(context)
-                            devices.insert(0,context)
+                            devices.append(context)
+                           # devices.insert(0,context)
                             measurement_devices =  "".join(context)
                         measurement_device = measurement_devices
                         print('measurement device: ', measurement_device)
         
                         #pobranie daty z bazy danych
-                        query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 10" 
+                        query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
                         cur.execute(query)
                         conn.commit()
                         x = [] 
                         for(measurement_time) in cur:
                            # x.append(measurement_time)
-                            x.insert(0,measurement_time)
+                            x.insert(0,measurement_time) # aby czas był dobrze sortowany
                         data =[]
                         data2 =[]
+                        data4 = []
                         for i in value: 
                                 to_convert = re.findall(r'\d\d+', str(i)) 
                                 converted = str(to_convert[0])
-                                print('converted:', converted)        
-                               # data.append(converted)
-                                data.insert(0,converted)
-                                print('data:', data)
+                                #print('converted:', converted)        
+                                data.append(converted)
+                               # data.insert(0,converted)
+                              #  print('data:', data)
             
                         for ii in x: 
                                 to_convert2 = re.findall(r'\d+', str(ii))
@@ -126,15 +127,51 @@ def graph():
                                 print('y: ',y,'measure day: ', measure_day) 
                                 data2.append(y) 
                                 print('data2: ',data2) 
+                                data4.append(measure_day)
                         labels = data2
                         values = data       
                         #   new_graph = Graph(data=graph, user_id=current_user.id)
                         #  db.session.add(new_graph)
                         #  db.session.commit()
                         # flash('Graph added!', category='succes')
+                      
+                      #probuje dodac daty pomiarow na strone
+                        query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements" 
+                        cur.execute(query)
+                        conn.commit()
+                        p = [] 
+                        for(measurement_time) in cur:
+                           p.append(measurement_time)
+                        
+                        data3 = []
+                        for k in value: 
+                                to_convert = re.findall(r'\d\d+', str(k)) 
+                                converted = str(to_convert[0])     
+                                data.append(converted)
+
+                        data5 = []
+                        for kk in x: 
+                                to_convert4 = re.findall(r'\d+', str(kk))
+                                year = str(to_convert4[0])
+                                month = str(to_convert4[1])
+                                day = str(to_convert4[2])
+                                measure_day = (day+'-'+month+'-'+year)
+                                data3.append(measure_day)
+                                for x in data3:
+                                    dzien = x
+                                    if dzien != measure_day:
+                                        data5.append(measure_day)
+                               # for measure_day in data3:
+                                  #   dzien = measure_day
+                                    # for i in data3:
+                                    # if dzien != measure_day:
+                                       # data5.append(dzien)
+
+                                             
+
                         cur.close()
                         conn.close()                
-                        return render_template("graph.html", measurement_device=measurement_device, labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
+                        return render_template("graph.html", data5=data5, measurement_device=measurement_device, labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
                         return render_template('nographs.html', user_first_name=user_name, user=user_id)
                 
