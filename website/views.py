@@ -14,7 +14,7 @@ import re
 import numpy as np
 from flask import Flask, redirect, url_for, render_template, session
 from flask_wtf import FlaskForm
-from wtforms.fields import DateField
+from wtforms.fields import DateField, TimeField
 from wtforms.validators import DataRequired
 from wtforms import validators, SubmitField
 
@@ -23,6 +23,8 @@ views = Blueprint('views', __name__)
 
 class InfoForm(FlaskForm):
     date = DateField('Measurement date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
+    enddate = DateField('End Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
+    #time = TimeField('Measurement time', format='%H:%M:%S', validators=(validators.DataRequired(),))
     submit = SubmitField('Submit')
 
 @views.route('/', methods=['GET', 'POST'])
@@ -43,7 +45,7 @@ def home():
 
     return render_template("home.html", user=current_user,  user_id=user_id, user_name=user_name)
 
-
+#xxxxxxxxxxxxxxxxxxxxx
 @views.route('/history', methods=['GET','POST'])
 @login_required
 def date():
@@ -52,8 +54,12 @@ def date():
     form = InfoForm()
     if form.validate_on_submit():
             session['date'] = form.date.data
+            session['enddate'] = form.enddate.data
+           # session['time'] = form.time.data
            # return render_template('history.html', form=form, user_first_name=user_name, user=user_id)
     date = session['date']
+    enddate = session['enddate']
+   # time = session['time']
    # if 1==1:
     while True:   
             conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
@@ -70,6 +76,7 @@ def date():
                 if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
+                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                         cur.execute(otrzymane)
                         conn.commit()
@@ -98,6 +105,7 @@ def date():
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
         
                         #pobranie daty z bazy danych
+                        query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') order by measurements_id desc limit 20" 
                         query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
                         cur.execute(query)
                         conn.commit()
@@ -131,9 +139,9 @@ def date():
                         values2 = data       
                         cur.close()
                         conn.close()    
-                        return render_template('history.html',  form=form,  labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
+                        return render_template('history.html', form=form,  labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
-                         return render_template('nographs.html', user_first_name=user_name, user=user_id)
+                         return render_template('nographs.html', form=form, user_first_name=user_name, user=user_id)
                          
 
 @views.route('/graph', methods=['GET', 'POST'])

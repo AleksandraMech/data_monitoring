@@ -19,13 +19,18 @@
     <form action="" method='POST' name="myform">
         {{ form.csrt_token }}
         {{ form.date.label }} {{form.date(class='datepicker')}} {{form.hidden_tag()}}
+        {{ form.enddate.label }} {{form.enddate(class='datepicker')}} {{form.hidden_tag()}}
         <p>
         {{form.submit()}}
         </p> 
     </form>
     
     <h4>measurement from: {{session['date']}}</h4>
-</form>
+    <h4>End Date is: {{session['enddate']}}</h4>
+
+
+
+
 
 <h5>Lowest heart rate value: {{min_hr}}  (bpm)</h5>
 <h5>Highest heart rate value: {{max_hr}}  (bpm)</h5>
