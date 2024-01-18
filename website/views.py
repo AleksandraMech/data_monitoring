@@ -26,6 +26,9 @@ class InfoForm(FlaskForm):
     enddate = DateField('End Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
     #time = TimeField('Measurement time', format='%H:%M:%S', validators=(validators.DataRequired(),))
     submit = SubmitField('Submit')
+    def validate_enddate(self, filed):
+        if filed.data <= self.date.data:
+             flash('Finish date must more or equal start date.', category='error')
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -76,7 +79,7 @@ def date():
                 if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
-                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') order by measurements_id desc limit 20" 
+                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                         cur.execute(otrzymane)
                         conn.commit()
@@ -105,7 +108,7 @@ def date():
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
         
                         #pobranie daty z bazy danych
-                        query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') order by measurements_id desc limit 20" 
+                        query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
                         cur.execute(query)
                         conn.commit()
