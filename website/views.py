@@ -29,6 +29,12 @@ class InfoForm(FlaskForm):
     def validate_enddate(self, filed):
         if filed.data <= self.date.data:
              flash('Finish date must more or equal start date.', category='error')
+             
+class InfoFormTime(FlaskForm):
+    time = TimeField('Measurement time', format='%H:%M:%S')
+    endtime = TimeField('Measurement time', format='%H:%M:%S')
+    submit = SubmitField('Submit')
+   
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -63,6 +69,12 @@ def date():
     date = session['date']
     enddate = session['enddate']
    # time = session['time']
+    form2 = InfoFormTime()
+    if form2.validate_on_submit():
+            session['time'] = form2.time.data
+            session['endtime'] = form2.endtime.data
+    time = session['time']
+    #endtime = session['endtime']
    # if 1==1:
     while True:   
             conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
@@ -81,6 +93,7 @@ def date():
                         #pobranie danych odnośnie pomiarów z bazy danych
                         otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
+                          #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                         cur.execute(otrzymane)
                         conn.commit()
                         value = [] 
@@ -111,6 +124,7 @@ def date():
                         query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
                         cur.execute(query)
+                        #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                         conn.commit()
                         x = [] 
                         for(measurement_time) in cur:
@@ -142,9 +156,9 @@ def date():
                         values2 = data       
                         cur.close()
                         conn.close()    
-                        return render_template('history.html', form=form,  labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
+                        return render_template('history.html', form=form, form2=form2, labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
-                         return render_template('nographs.html', form=form, user_first_name=user_name, user=user_id)
+                         return render_template('nographs.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
                          
 
 @views.route('/graph', methods=['GET', 'POST'])
