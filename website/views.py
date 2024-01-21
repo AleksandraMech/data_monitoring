@@ -24,15 +24,15 @@ views = Blueprint('views', __name__)
 class InfoForm(FlaskForm):
     date = DateField('Measurement date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
     enddate = DateField('End Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
-    #time = TimeField('Measurement time', format='%H:%M:%S', validators=(validators.DataRequired(),))
+  #  starttime = TimeField('Measurement time', format='%H:%M:%S', validators=(validators.DataRequired(),))
     submit = SubmitField('Submit')
     def validate_enddate(self, filed):
         if filed.data <= self.date.data:
              flash('Finish date must more or equal start date.', category='error')
              
 class InfoFormTime(FlaskForm):
-    time = TimeField('Measurement time', format='%H:%M:%S')
-    endtime = TimeField('Measurement time', format='%H:%M:%S')
+    time = TimeField('Measurement time', format='%H.%M')
+    endtime = TimeField('Measurement time', format='%H.%M')
     submit = SubmitField('Submit')
    
 
@@ -64,6 +64,7 @@ def date():
     if form.validate_on_submit():
             session['date'] = form.date.data
             session['enddate'] = form.enddate.data
+         #   session['starttime'] = form.starttime.data
            # session['time'] = form.time.data
            # return render_template('history.html', form=form, user_first_name=user_name, user=user_id)
     date = session['date']
@@ -74,10 +75,13 @@ def date():
             session['time'] = form2.time.data
             session['endtime'] = form2.endtime.data
     time = session['time']
+    endtime = session['time']
     #endtime = session['endtime']
    # if 1==1:
     while True:   
-            conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+            password1 = "albertina"
+            user1 = "postgres"
+            conn = psycopg2.connect(database="data_monitoring", user="postgres", password=password1, host="localhost", port="5432")
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
@@ -91,7 +95,7 @@ def date():
                 if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
-                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
+                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  ( \'"+str(time)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') ( \'"+str(endtime)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                           #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                         cur.execute(otrzymane)

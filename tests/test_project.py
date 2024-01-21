@@ -46,7 +46,7 @@ def test_upload(client):
 #def test_home_page_loads(live_server, page):
    # page.goto(url_for('home.index', _external=True))
     #expect(page).to_have_title("Home")
-'''
+
 #w terminalu playwright codegen http://127.0.0.1:5000  
 def test_sign_up_add_note(live_server, page):
     page.goto("http://127.0.0.1:5000/login?next=%2F")# bo to jest prawdziwy serwer a
@@ -62,5 +62,5 @@ def test_sign_up_add_note(live_server, page):
     page.get_by_role("button", name="Submit").click()
     page.locator("#note").click()
     page.locator("#note").fill("Testowe dodanie notatki")
-    page.get_by_role("button", name="Add Note").click() '''
+    page.get_by_role("button", name="Add Note").click() 
 
