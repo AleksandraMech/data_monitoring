@@ -16,35 +16,33 @@ messageId = 1
 
 while(True):
 
-    measure = random.randint(50, 80)
+    measure = random.randint(55, 90)
     measure_time = datetime.datetime.now()
-    measurement_device = "bathtub"
-
+    measurement_device = "chair"
     message = f" {measure}"
-    
+    now = datetime.datetime.now().isoformat(' ', 'seconds')
+
     class Measure:
-       def __init__(self, patient_id, sender, context, messageType, answerType, HR):
-          self.patient_id = patient_id
-          self.sender = sender
-          self.context = context
-          self.messageType = messageType
-          self.answerType = answerType
-          self.HR = HR
+      def __init__(self, patient_id, sender, context, messageType, answerType, HR, measurement_time):
+         self.patient_id = patient_id
+         self.sender = sender
+         self.context = context
+         self.messageType = messageType
+         self.answerType = answerType
+         self.HR = HR
+         self.measurement_time = measurement_time
 
 
-    p2 = Measure("24", "amech", "echair", "messageId", "measure", message)
+    p1 = Measure("24", "amech", "chair", "data", "measure", message, now)
     with open("plik.json", "a") as plik:
-        json_string = json.dumps(p2.__dict__)
+        json_string = json.dumps(p1.__dict__)
         plik.write(json_string)
-    
+
     channel.basic_publish(exchange='', routing_key='measurement_data', body=json_string)
 
     print(f"sent message from chair: {message}")
     
-    time.sleep(random.randint(1, 4))
-
-    messageId+=1
-   
+    time.sleep(3)
 
 
 

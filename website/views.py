@@ -19,6 +19,7 @@ from wtforms.validators import DataRequired
 from wtforms import validators, SubmitField
 
 
+
 views = Blueprint('views', __name__)
 
 class InfoForm(FlaskForm):
@@ -54,6 +55,8 @@ def home():
 
     return render_template("home.html", user=current_user,  user_id=user_id, user_name=user_name)
 
+postgres_password = os.environ.get('postgres_password')
+postgres_user = os.environ.get('postgres_user')
 #xxxxxxxxxxxxxxxxxxxxx
 @views.route('/history', methods=['GET','POST'])
 @login_required
@@ -79,9 +82,7 @@ def date():
     #endtime = session['endtime']
    # if 1==1:
     while True:   
-            password1 = "albertina"
-            user1 = "postgres"
-            conn = psycopg2.connect(database="data_monitoring", user="postgres", password=password1, host="localhost", port="5432")
+            conn = psycopg2.connect(database="data_monitoring", user=postgres_user, password=postgres_password, host="localhost", port="5432")
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
@@ -172,7 +173,7 @@ def graph():
         user_name = current_user.first_name
        
         while True:     
-            conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+            conn = psycopg2.connect(database="data_monitoring", user=postgres_user, password=postgres_password, host="localhost", port="5432")
            # if conn != None and user_id == 24:
             if conn != None:
                 cur = conn.cursor()
@@ -218,8 +219,8 @@ def graph():
                         cur.execute(devicefromtable)
                         devices = [] 
                         for(context) in cur:
-                            devices.append(context)
-                           # devices.insert(0,context)
+                           # devices.append(context)
+                            devices.insert(0,context)
                             measurement_devices =  "".join(context)
                         measurement_device = measurement_devices
                         print('measurement device: ', measurement_device)
@@ -291,7 +292,7 @@ def admin():
     user_name = current_user.first_name
     if user_id == 24: 
         while True:     
-            conn = psycopg2.connect(database="data_monitoring", user="postgres", password="albertina", host="localhost", port="5432")
+            conn = psycopg2.connect(database="data_monitoring", user=postgres_user, password=postgres_password, host="localhost", port="5432")
             if conn != None:
                 cur = conn.cursor()
 
