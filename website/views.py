@@ -18,6 +18,7 @@ from wtforms.fields import DateField, TimeField
 from wtforms.validators import DataRequired
 from wtforms import validators, SubmitField
 
+import website.secret_variables as secret_variables
 
 
 views = Blueprint('views', __name__)
@@ -55,8 +56,6 @@ def home():
 
     return render_template("home.html", user=current_user,  user_id=user_id, user_name=user_name)
 
-postgres_password = os.environ.get('postgres_password')
-postgres_user = os.environ.get('postgres_user')
 #xxxxxxxxxxxxxxxxxxxxx
 @views.route('/history', methods=['GET','POST'])
 @login_required
@@ -80,9 +79,8 @@ def date():
     time = session['time']
     endtime = session['time']
     #endtime = session['endtime']
-   # if 1==1:
     while True:   
-            conn = psycopg2.connect(database="data_monitoring", user=postgres_user, password=postgres_password, host="localhost", port="5432")
+            conn = psycopg2.connect(database="data_monitoring", user=secret_variables.postgres_user, password=secret_variables.postgres_password, host="localhost", port="5432")
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
@@ -96,7 +94,7 @@ def date():
                 if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
-                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  ( \'"+str(time)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') ( \'"+str(endtime)+"\') order by measurements_id desc limit 20" 
+                        otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                           #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                         cur.execute(otrzymane)
@@ -164,7 +162,9 @@ def date():
                         return render_template('history.html', form=form, form2=form2, labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
                          return render_template('nographs.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
-                         
+           # else: 
+               #  return render_template('nographs.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+                             
 
 @views.route('/graph', methods=['GET', 'POST'])
 @login_required
@@ -173,7 +173,7 @@ def graph():
         user_name = current_user.first_name
        
         while True:     
-            conn = psycopg2.connect(database="data_monitoring", user=postgres_user, password=postgres_password, host="localhost", port="5432")
+            conn = psycopg2.connect(database="data_monitoring", user=secret_variables.postgres_user, password=secret_variables.postgres_password, host="localhost", port="5432")
            # if conn != None and user_id == 24:
             if conn != None:
                 cur = conn.cursor()
@@ -292,7 +292,7 @@ def admin():
     user_name = current_user.first_name
     if user_id == 24: 
         while True:     
-            conn = psycopg2.connect(database="data_monitoring", user=postgres_user, password=postgres_password, host="localhost", port="5432")
+            conn = psycopg2.connect(database="data_monitoring", user=secret_variables.postgres_user, password=secret_variables.postgres_password, host="localhost", port="5432")
             if conn != None:
                 cur = conn.cursor()
 
