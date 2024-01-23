@@ -85,16 +85,19 @@ def date():
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
-                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
+                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') " 
                 cur.execute(id)
                 patient_id_nr = [] 
                 for(nr) in cur:
                     patient_id_nr.append(nr)
                     patient_id_numbers =  "".join(nr)
                 patient_id_number = patient_id_numbers
-                if 1==1:
+                dzien =  "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 1" 
+                if cur.execute(dzien) != 0:
+                #if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
+                        otrzymane3 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                         otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                           #dodać warunek że jeżeli nie ma takiej daty to con.rollback
@@ -125,7 +128,8 @@ def date():
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
         
                         #pobranie daty z bazy danych
-                        query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
+                        query3 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\')  order by measurements_id desc limit 20" 
+                        query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\')  order by measurements_id desc limit 20" 
                         query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
                         cur.execute(query)
                         #dodać warunek że jeżeli nie ma takiej daty to con.rollback
@@ -162,9 +166,11 @@ def date():
                         conn.close()    
                         return render_template('history.html', form=form, form2=form2, labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
-                         return render_template('nographs.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
-           # else: 
-               #  return render_template('nographs.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+                         return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+                else:
+                    return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+            else: 
+                 return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
                              
 
 @views.route('/graph', methods=['GET', 'POST'])
@@ -179,7 +185,7 @@ def graph():
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
-                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
+                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') " 
                 cur.execute(id)
                 patient_id_nr = [] 
                 for(nr) in cur:
