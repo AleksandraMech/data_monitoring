@@ -179,7 +179,7 @@ def graph():
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
-                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
+                id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                 cur.execute(id)
                 patient_id_nr = [] 
                 for(nr) in cur:
@@ -190,7 +190,7 @@ def graph():
                     #if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
-                        otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
+                        otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                         cur.execute(otrzymane)
                         conn.commit()
                         value = [] 
@@ -216,7 +216,7 @@ def graph():
                                 con2 = re.findall(r'\d\d+', str(max))
                                 max_hr = str(con2[0])
                         mean = round(sum/numbers) # round zookrągla do pełnej liczby
-                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements order by measurements_id desc limit 20 " 
+                        devicefromtable = "SELECT json_info -> 'context' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                         cur.execute(devicefromtable)
                         devices = [] 
                         for(context) in cur:
@@ -227,7 +227,7 @@ def graph():
                         print('measurement device: ', measurement_device)
         
                         #pobranie daty z bazy danych
-                        query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
+                        query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                         cur.execute(query)
                         conn.commit()
                         x = [] 

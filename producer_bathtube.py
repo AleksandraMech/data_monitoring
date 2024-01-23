@@ -28,7 +28,7 @@ while(True):
          self.measurement_time = measurement_time
 
 
-    p1 = Measure("36", "amech", "bathtube", "data", "measure", message, now)
+    p1 = Measure("24", "amech", "bathtube", "data", "measure", message, now)
     with open("plik.json", "a") as plik:
         json_string = json.dumps(p1.__dict__)
         plik.write(json_string)
