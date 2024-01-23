@@ -1,0 +1,5 @@
+database="data_monitoring"
+postgres_user = "postgres"
+postgres_password = "albertina"
+host="localhost"
+port="5432"

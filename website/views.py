@@ -18,7 +18,7 @@ from wtforms.fields import DateField, TimeField
 from wtforms.validators import DataRequired
 from wtforms import validators, SubmitField
 
-import website.secret_variables as secret_variables
+import website.cfg as cfg
 
 
 views = Blueprint('views', __name__)
@@ -79,8 +79,9 @@ def date():
     time = session['time']
     endtime = session['time']
     #endtime = session['endtime']
+
     while True:   
-            conn = psycopg2.connect(database="data_monitoring", user=secret_variables.postgres_user, password=secret_variables.postgres_password, host="localhost", port="5432")
+            conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru
@@ -173,7 +174,7 @@ def graph():
         user_name = current_user.first_name
        
         while True:     
-            conn = psycopg2.connect(database="data_monitoring", user=secret_variables.postgres_user, password=secret_variables.postgres_password, host="localhost", port="5432")
+            conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
            # if conn != None and user_id == 24:
             if conn != None:
                 cur = conn.cursor()
@@ -292,7 +293,7 @@ def admin():
     user_name = current_user.first_name
     if user_id == 24: 
         while True:     
-            conn = psycopg2.connect(database="data_monitoring", user=secret_variables.postgres_user, password=secret_variables.postgres_password, host="localhost", port="5432")
+            conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
             if conn != None:
                 cur = conn.cursor()
 
