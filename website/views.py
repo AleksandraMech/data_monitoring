@@ -63,8 +63,8 @@ def home():
 def date():
     user_id=current_user.id
     user_name = current_user.first_name
-    date = datetime.datetime.now()
-    enddate = datetime.datetime.now()
+  #  date = datetime.datetime.now()
+  #  enddate = datetime.datetime.now()
 
     while True:   
             conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
@@ -89,8 +89,8 @@ def date():
                      date = datetime.datetime.now()
                      enddate = datetime.datetime.now()
                      
-               # date = session['date']
-               # enddate = session['enddate']
+                date = session['date']
+                enddate = session['enddate']
                 # time = session['time']
                 form2 = InfoFormTime()
                 if form2.validate_on_submit():
@@ -105,17 +105,17 @@ def date():
 
                 dzien =  "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 1" 
                # if cur.execute(dzien) != datetime.datetime.now():
-                if  session['date']  == datetime.datetime.now() or date==None:
-                    return render_template('emptyhistory.html', form=form, form2=form2, user=current_user)
-                else:
-                #if 1==1:
+                #if  session['date']  == datetime.datetime.now() or date==None:
+                   # return render_template('emptyhistory.html', form=form, form2=form2, user=current_user)
+                #else:
+                if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
                         otrzymane3 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                         otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                           #dodać warunek że jeżeli nie ma takiej daty to con.rollback
-                        cur.execute(otrzymane)
+                        cur.execute(otrzymane2)
                         conn.commit()
                         value = [] 
                         min = None
@@ -145,7 +145,7 @@ def date():
                         query3 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\')  order by measurements_id desc limit 20" 
                         query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\')  order by measurements_id desc limit 20" 
                         query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
-                        cur.execute(query)
+                        cur.execute(query2)
                         #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                         conn.commit()
                         x = [] 
