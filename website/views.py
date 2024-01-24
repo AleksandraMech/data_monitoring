@@ -17,6 +17,7 @@ from flask_wtf import FlaskForm
 from wtforms.fields import DateField, TimeField
 from wtforms.validators import DataRequired
 from wtforms import validators, SubmitField
+import datetime
 
 import website.cfg as cfg
 
@@ -62,23 +63,8 @@ def home():
 def date():
     user_id=current_user.id
     user_name = current_user.first_name
-    form = InfoForm()
-    if form.validate_on_submit():
-            session['date'] = form.date.data
-            session['enddate'] = form.enddate.data
-         #   session['starttime'] = form.starttime.data
-           # session['time'] = form.time.data
-           # return render_template('history.html', form=form, user_first_name=user_name, user=user_id)
-    date = session['date']
-    enddate = session['enddate']
-   # time = session['time']
-    form2 = InfoFormTime()
-    if form2.validate_on_submit():
-            session['time'] = form2.time.data
-            session['endtime'] = form2.endtime.data
-    time = session['time']
-    endtime = session['time']
-    #endtime = session['endtime']
+    date = datetime.datetime.now()
+    enddate = datetime.datetime.now()
 
     while True:   
             conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
@@ -92,8 +78,27 @@ def date():
                     patient_id_nr.append(nr)
                     patient_id_numbers =  "".join(nr)
                 patient_id_number = patient_id_numbers
+
+                form = InfoForm()
+                if form.validate_on_submit():
+                    session['date'] = form.date.data
+                    session['enddate'] = form.enddate.data
+                date = session['date']
+                enddate = session['enddate']
+                # time = session['time']
+                form2 = InfoFormTime()
+                if form2.validate_on_submit():
+                        session['time'] = form2.time.data
+                        session['endtime'] = form2.endtime.data
+                #time = session['time']
+               # endtime = session['time']
+                #endtime = session['endtime']
+
                 dzien =  "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 1" 
-                if cur.execute(dzien) != 0:
+               # if cur.execute(dzien) != datetime.datetime.now():
+                if date != datetime.datetime.now() or date!=None:
+                    return render_template('emptyhistory.html', form=form, form2=form2, user=current_user)
+                else:
                 #if 1==1:
                     if str(user_id) == str(patient_id_number):
                         #pobranie danych odnośnie pomiarów z bazy danych
@@ -101,7 +106,7 @@ def date():
                         otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                         otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                           #dodać warunek że jeżeli nie ma takiej daty to con.rollback
-                        cur.execute(otrzymane)
+                        cur.execute(otrzymane2)
                         conn.commit()
                         value = [] 
                         min = None
@@ -131,7 +136,7 @@ def date():
                         query3 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\')  order by measurements_id desc limit 20" 
                         query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\')  order by measurements_id desc limit 20" 
                         query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
-                        cur.execute(query)
+                        cur.execute(query2)
                         #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                         conn.commit()
                         x = [] 
@@ -165,12 +170,12 @@ def date():
                         cur.close()
                         conn.close()    
                         return render_template('history.html', form=form, form2=form2, labels2 = labels2, values2 = values2,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
-                    else:
-                         return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
-                else:
-                    return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+                   # else:
+                        # return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+               # else:
+                  #  return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
             else: 
-                 return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
+                 return render_template('emptyhistory.html', form=form, form2=form2, user=current_user)
                              
 
 @views.route('/graph', methods=['GET', 'POST'])
@@ -277,7 +282,7 @@ def graph():
                         conn.close()                
                         return render_template("graph.html", measurement_device=measurement_device, labels = labels, values = values,  user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
                     else:
-                        return render_template('nographs.html', user_first_name=user_name, user=user_id)
+                        return render_template('nographs.html', user_first_name=user_name, user=current_user)
                 
 
 @views.route('/delete-note', methods=['POST'])

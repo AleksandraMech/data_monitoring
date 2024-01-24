@@ -19,16 +19,16 @@
     <form action="" method='POST' name="myform">
         {{ form.csrt_token }}
         {{ form.date.label }} {{form.date(class='datepicker')}} {{form.hidden_tag()}}
-        {{ form2.csrt_token }}
+       <!-- {{ form2.csrt_token }}
         {{ form2.time.label }} {{form2.time(class='timepicker')}} {{form2.hidden_tag()}}
-        {{ form.csrt_token }}
+        {{ form.csrt_token }} </form> -->
         {{ form.enddate.label }} {{form.enddate(class='datepicker')}} {{form.hidden_tag()}}
-        {{ form2.csrt_token }}
-        {{ form2.endtime.label }} {{form2.endtime(class='timepicker')}} {{form2.hidden_tag()}}
+        <!--  {{ form2.csrt_token }}
+        {{ form2.endtime.label }} {{form2.endtime(class='timepicker')}} {{form2.hidden_tag()}}</form> -->
       
         <p>
         {{form.submit()}}
-        {{form2.submit()}}
+       
         </p> 
     </form>
     
@@ -45,9 +45,10 @@
         </p> 
     </form>
     <br />  </form> -->
-    <h4>last 20 measurements in the range from day : {{session['date']}}  to day: {{session['enddate']}}</h4>
-    <h4>measurement since hour: {{session['time']}} up to an hour: {{session['endtime']}}</h4>
-    
+    <h4>last 20 measurements in the range: </h4>
+    <h4>  from day : {{session['date']}}  to day: {{session['enddate']}}</h4>
+   <!-- <h4>measurement since hour: {{session['time']}} up to an hour: {{session['endtime']}}</h4> </form> -->
+     
 
 
 
