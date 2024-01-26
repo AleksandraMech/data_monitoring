@@ -1,51 +1,39 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, session
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 from datetime import datetime
-#from script_process_csv import process_csv
-from .models import Note #, Graph
+from .models import Note
 from . import db
-from .models import Measurement
 import json
-import os #operating system, library
-import pandas as pd
 import psycopg2
 import re
-import numpy as np
 from flask import Flask, redirect, url_for, render_template, session
 from flask_wtf import FlaskForm
 from wtforms.fields import DateField, TimeField
 from wtforms.validators import DataRequired
 from wtforms import validators, SubmitField
 import datetime
-
 import website.cfg as cfg
 
 
 views = Blueprint('views', __name__)
 
 class InfoForm(FlaskForm):
-    ##dodac default
     date = DateField('Measurement date', format='%Y-%m-%d', default=datetime.datetime.now(), validators=(validators.DataRequired(),))
     enddate = DateField('End Date', format='%Y-%m-%d', default=datetime.datetime.now(), validators=(validators.DataRequired(),))
-  #  starttime = TimeField('Measurement time', format='%H:%M:%S', validators=(validators.DataRequired(),))
     submit = SubmitField('Submit')
     def validate_enddate(self, filed):
         if filed.data <= self.date.data:
-             flash('Finish date must more or equal start date.', category='error')
-             
+             flash('Finish date must more or equal start date.', category='error')            
 class InfoFormTime(FlaskForm):
     time = TimeField('Measurement time', format='%H.%M')
     endtime = TimeField('Measurement time', format='%H.%M')
     submit = SubmitField('Submit')
    
-
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     if request.method == 'POST':
         note = request.form.get('note')
-
         if len(note) < 1:
             flash('Note is too short!', category='error')
         else:
@@ -55,18 +43,13 @@ def home():
             flash('Note added!', category='succes')
     user_id=current_user.id
     user_name=current_user.first_name
-
     return render_template("home.html", user=current_user,  user_id=user_id, user_name=user_name)
 
-#xxxxxxxxxxxxxxxxxxxxx
 @views.route('/history', methods=['GET','POST'])
 @login_required
 def date():
     user_id=current_user.id
     user_name = current_user.first_name
-    date = datetime.datetime.now()
-    enddate = datetime.datetime.now()
-
     while True:   
             conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
             if conn != None:
@@ -79,7 +62,7 @@ def date():
                     patient_id_nr.append(nr)
                     patient_id_numbers =  "".join(nr)
                 patient_id_number = patient_id_numbers
-
+                #dodanie formularzy odczytujących datę podaną przez użytkownika w zakładce history
                 form = InfoForm()
                 session['date'] = datetime.datetime.now()
                 session['enddate'] = datetime.datetime.now()
@@ -88,11 +71,9 @@ def date():
                     session['enddate'] = form.enddate.data
                 else:
                      date = datetime.datetime.now()
-                     enddate = datetime.datetime.now()
-                     
+                     enddate = datetime.datetime.now()   
                 date = session['date']
                 enddate = session['enddate']
-                # time = session['time']
                 form2 = InfoFormTime()
                 if form2.validate_on_submit():
                         session['time'] = form2.time.data
@@ -101,12 +82,6 @@ def date():
                      time = '(00:00:00)'
                      enddate = '(00:00:00)'
 
-                print(" typedate:", type(date), date)
-                
-
-
-               
-               # if cur.execute(dzien) != datetime.datetime.now():
                 if  session['date']  == datetime.datetime.now() :
                     return render_template('emptyhistory.html', form=form, form2=form2, user=current_user)
                 else:
@@ -114,16 +89,13 @@ def date():
                     cur.execute(dzien)
                     conn.commit()
                     for(dzien) in cur:
-               # if 1==1:
-                    #chce jeszcze dodać warunek, że gdy nie ma pomiaru z danego dnia, to żeby wracało do formularza
-                    #
                         if str(user_id) == str(patient_id_number):
                             #pobranie danych odnośnie pomiarów z bazy danych
                             otrzymane3 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') order by measurements_id desc limit 20" 
                             otrzymane2 = "SELECT json_info -> 'HR' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\')  AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') order by measurements_id desc limit 20" 
                             otrzymane = "SELECT json_info -> 'HR' as keyvalues FROM measurements  order by measurements_id desc limit 20" 
                             #dodać warunek że jeżeli nie ma takiej daty to con.rollback
-                            cur.execute(otrzymane)
+                            cur.execute(otrzymane3)
                             conn.commit()
                             value = [] 
                             min = None
@@ -147,19 +119,13 @@ def date():
                                     max = n 
                                     con2 = re.findall(r'\d\d+', str(max))
                                     max_hr = str(con2[0])
-                                    ##dodac wyjatk ##try
                             mean = round(sum/numbers) # round zookrągla do pełnej liczby
-            
                             #pobranie daty z bazy danych
-                            query3 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\')  order by measurements_id desc limit 20" 
-                            query2 = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\')  order by measurements_id desc limit 20" 
-                            query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements order by measurements_id desc limit 20" 
+                            query = "SELECT json_info -> 'measurement_time' as keyvalues FROM measurements WHERE json_info ->> 'measurement_time' > ( \'"+str(date)+"\') AND json_info ->> 'measurement_time' < ( \'"+str(enddate)+"\') AND cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\')  order by measurements_id desc limit 20" 
                             cur.execute(query)
-                            #dodać warunek że jeżeli nie ma takiej daty to con.rollback
                             conn.commit()
                             x = [] 
                             for(measurement_time) in cur:
-                            # x.append(measurement_time)
                                 x.insert(0,measurement_time) # aby czas był dobrze sortowany
                             data =[]
                             data2 =[]
@@ -187,10 +153,6 @@ def date():
                             cur.close()
                             conn.close()    
                             return render_template('history.html', form=form, form2=form2, labels2 = labels2, values2 = values2,  user_id= user_id, user=current_user, measure_day=measure_day, min_hr=min_hr, max_hr=max_hr, mean=mean)
-                    # else:
-                            # return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
-                # else:
-                    #  return render_template('emptyhistory.html', form=form, form2=form2, user_first_name=user_name, user=user_id)
                     else: 
                         flash('W podanym zakresie dat nie ma żadnych pomiarów. Wybierz inne daty.', category='error')
                         return render_template('emptyhistory.html', form=form, form2=form2, user=current_user)
@@ -204,7 +166,6 @@ def graph():
        
         while True:     
             conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
-           # if conn != None and user_id == 24:
             if conn != None:
                 cur = conn.cursor()
                 #sprawdzenie czy id zgadza sie z id pomiaru, abyy stworzyć warunek, że gdy nie ma w bazie danych pomiarów do takiego id, to przekieruje do strony z informacja ze nie ma danych dla tego uyzytkownika
@@ -303,7 +264,6 @@ def delete_note():
             db.session.commit()
 
 
-# Create Admin Page
 @views.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
@@ -314,10 +274,8 @@ def admin():
             conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
             if conn != None:
                 cur = conn.cursor()
-
                 patient_id = 'SELECT patient_id FROM patient'
                 cur.execute(patient_id)
-                #print(patient_id)
                 patients_id = [] 
                 for(patient_id) in cur:    
                     convert = re.findall(r'\d\d+', str(patient_id)) 
