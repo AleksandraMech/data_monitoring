@@ -26,10 +26,10 @@
         <!--  {{ form2.csrt_token }}
         {{ form2.endtime.label }} {{form2.endtime(class='timepicker')}} {{form2.hidden_tag()}}</form> -->
       
-        <p>
+        
         {{form.submit()}}
        
-        </p> 
+        
     </form>
     
    
@@ -76,15 +76,27 @@
             ]
         }, 
         options: {
-            responsive: false
-        }   
-    });
+             responsive: false,
+             
+             scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Wartość pulsu'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Czas pomiaru'
+          }
+        }]
+      }
+      
+         }   
+     });
     </script>
 
-
-
-</body>
-  
-
-
-{% endblock %}
+    
+    </body>
+    {% endblock %}

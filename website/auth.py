@@ -16,6 +16,7 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 ### spróbować zrobic na postgresie
+
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
