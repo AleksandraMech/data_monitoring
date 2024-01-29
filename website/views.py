@@ -19,7 +19,7 @@ views = Blueprint('views', __name__)
 
 class InfoForm(FlaskForm):
     date = DateField('Measurement date', format='%Y-%m-%d', default=datetime.datetime.now(), validators=(validators.DataRequired(),))
-    enddate = DateField('End Date', format='%Y-%m-%d', default=datetime.datetime.now(), validators=(validators.DataRequired(),))
+    enddate = DateField('End Date', format='%Y-%m-%d', maxdate=datetime.datetime.now(),  default=datetime.datetime.now(), validators=(validators.DataRequired(),))
     submit = SubmitField('Send')
     def validate_enddate(self, filed):
         if filed.data <= self.date.data:
@@ -289,13 +289,13 @@ def admin():
             conn = psycopg2.connect(database=cfg.database, user=cfg.postgres_user, password=cfg.postgres_password, host=cfg.host, port=cfg.port)
             if conn != None:
                 cur = conn.cursor()
-                patient_id = 'SELECT patient_id FROM patient'
+                patient_id = 'SELECT identyfikator FROM patient'
                 cur.execute(patient_id)
                 patients_id = [] 
                 for(patient_id) in cur:    
-                    convert = re.findall(r'\d\d+', str(patient_id)) 
-                    converted = str(convert[0])
-                    patients_id.append(converted)   
+                    #convert = re.findall(r'\d\d+', str(patient_id)) 
+                    #converted = str(convert[])
+                    patients_id.append(patient_id)   
                     
                 names= 'SELECT name FROM patient'
                 cur.execute(names)

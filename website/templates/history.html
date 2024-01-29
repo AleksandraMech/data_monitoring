@@ -15,7 +15,7 @@
   <br />
   <h2>Historical data</h3>
   <br />
-    <h4> Select what day you want to see the chart from </h4>       
+    <h4> Select what day you want to see the chart from: </h4>       
     <form action="" method='POST' name="myform">
         {{ form.csrt_token }}
         {{ form.date.label }} {{form.date(class='datepicker')}} {{form.hidden_tag()}}
@@ -25,11 +25,8 @@
         {{ form.enddate.label }} {{form.enddate(class='datepicker')}} {{form.hidden_tag()}}
         <!--  {{ form2.csrt_token }}
         {{ form2.endtime.label }} {{form2.endtime(class='timepicker')}} {{form2.hidden_tag()}}</form> -->
-      
-        
         {{form.submit()}}
-       
-        
+      
     </form>
     
    
@@ -45,18 +42,13 @@
         </p> 
     </form>
     <br />  </form> -->
-    <h4>last 20 measurements in the range: </h4>
-    <h4>  from day : {{session['date']}}  to day: {{session['enddate']}}</h4>
+
+    <h5> measurements from day : {{session['date']}}  to day: {{session['enddate']}}</h5>
    <!-- <h4>measurement since hour: {{session['time']}} up to an hour: {{session['endtime']}}</h4> </form> -->
-     
-
-
-
-
-    <br />
-    <h5>Lowest heart rate value: {{min_hr}}  (bpm)</h5>
-    <h5>Highest heart rate value: {{max_hr}}  (bpm)</h5>
-    <h5>Average heart rate: {{mean}}  (bpm)</h5>
+      
+    <h6>Lowest heart rate value: {{min_hr}}  (bpm)</h6>
+    <h6>Highest heart rate value: {{max_hr}}  (bpm)</h6>
+    <h6>Average heart rate: {{mean}}  (bpm)</h6>
 
     <canvas id="lineChart" width="900" height="400"></canvas>
     <script >

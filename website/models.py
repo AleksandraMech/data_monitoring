@@ -11,7 +11,6 @@ class Measurement(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #patrzac na user_id możemy zobaczyć jaki user to stworzył
    # plot = db.relationship('Plot')
    
-
 class Graph(db.Model):
     id = db.Column(db.Integer, primary_key=True) #unikalne identyfikowanie każdego obiektu
     values = db.Column(db.String(10000))
@@ -24,7 +23,6 @@ class Note(db.Model):
     data = db.Column(db.String(10000))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #relacja jedna do wielu (jeden user i wiele notatek); 
-
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
