@@ -39,7 +39,6 @@ def on_message_received(ch, method, properties, body):
              try:
                 zm = "INSERT INTO measurements (json_info, measurements_date) VALUES ( \'"+str(line)+"\', '"+now+"')"
                 cur.execute(zm)
-               
                 print(f'{line} is received')
                 patient_id= "SELECT json_info -> 'patient_id' as keyvalues FROM measurements" 
                 cur.execute(patient_id)

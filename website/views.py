@@ -19,7 +19,7 @@ views = Blueprint('views', __name__)
 
 class InfoForm(FlaskForm):
     date = DateField('Measurement date', format='%Y-%m-%d', default=datetime.datetime.now(), validators=(validators.DataRequired(),))
-    enddate = DateField('End Date', format='%Y-%m-%d', maxdate=datetime.datetime.now(),  default=datetime.datetime.now(), validators=(validators.DataRequired(),))
+    enddate = DateField('End Date', format='%Y-%m-%d',  default=datetime.datetime.now(), validators=(validators.DataRequired(),))
     submit = SubmitField('Send')
     def validate_enddate(self, filed):
         if filed.data <= self.date.data:
@@ -176,11 +176,6 @@ def graph():
                 #sprawdzenie czy id zgadza sie z id pomiaru, abyy stworzyć warunek, że gdy nie ma w bazie danych pomiarów do takiego id, to przekieruje do strony z informacja ze nie ma danych dla tego uyzytkownika
                 id = "SELECT json_info -> 'patient_id' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = ( \'"+str(user_id)+"\') " 
                 cur.execute(id)
-               # id = "SELECT DISTINCT json_info ->> 'patient_id' as keyvalues FROM measurements where cast(json_info ->> 'patient_id' as INTEGER) = 40" 
-               # cur.execute(id)
-               # row = cur.fetchone()
-               # print("czysiezgadza", row)
-              #  if row == user_id:
                 row = cur.fetchone()
                 if row is None:
                      return render_template('nographs.html', user_first_name=user_name, user=current_user)
